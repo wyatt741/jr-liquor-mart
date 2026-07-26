@@ -4,10 +4,11 @@ Marketing site for **JR Liquor Mart**, 2616 E Ventura Blvd Unit 106, Camarillo, 
 (Old Town Camarillo, est. 1997). Phone 805-388-3288. Instagram @jrliquormart.
 Built 2026-07-26 from Wyatt's `site-template` (its `PLAYBOOK.md` governs conventions).
 
-**Currently a subfolder on branch `claude/jr-liquor-mart-build-5s9sev` of `wyatt741/site-template`.**
-The plan of record (intake decision): split into its own repo `wyatt741/jr-liquor-mart`,
-GitHub Pages on `master`, custom domain `jrliquormart.com` (CNAME ships in this folder;
-the domain is unregistered as of 2026-07-26 and needs registering).
+**This IS the site's own repo** (`wyatt741/jr-liquor-mart`, public, deploy branch `master`),
+split out on 2026-07-26 from the merged `wyatt741/site-template` PR #3 (the `jr-liquor-mart/`
+folder there is a historical copy; THIS repo is the source of truth). GitHub Pages serves
+`master` root once enabled in Settings; custom domain `jrliquormart.com` is still unregistered,
+so `CNAME` is parked as `CNAME.hold` (rename back once the domain's DNS points at Pages).
 
 ## The one rule
 Edit content in `build.py`, run `python3 build.py`, never hand-edit the generated `.html`.
@@ -25,7 +26,7 @@ quotes; bracketed letters mark corrected typos only.
 | `assets/` | Placeholder monogram favicons only. NO real photos yet; pages use `tile()` gradient placeholders. |
 | `docs/RESEARCH_BRIEF.md` | The sourced research brief the whole site is built from. |
 | `docs/PROJECT_STATE.md` | Status + open items. Read this to resume. |
-| `CNAME` | `jrliquormart.com` (for GitHub Pages once the repo splits out). |
+| `CNAME.hold` | `jrliquormart.com`, parked. Rename to `CNAME` once the domain is registered and DNS points at GitHub Pages (until then a live CNAME would redirect the github.io preview to a dead domain). |
 
 ## Intake decisions (2026-07-26, confirmed with Wyatt)
 - Dark default + amber bourbon palette, Fraunces display (light mode: cream + espresso).
@@ -38,10 +39,13 @@ quotes; bracketed letters mark corrected typos only.
 - Hours shown: daily 8am-10pm (Apple Maps; only Sunday was Google-verified). Confirm with owner.
 
 ## Launch blockers (owner/Wyatt input needed)
+0. **Enable GitHub Pages** (Settings > Pages > Deploy from a branch > `master` / root).
+   Until this is clicked the site 404s at https://wyatt741.github.io/jr-liquor-mart/.
 1. **Contact inbox**: `EMAIL` in `build.py` + `LEAD_URL` in `chat.js` are pending
    (`EMAIL_READY = False` hides email on the pages; the form will not deliver until the real
    lowercase inbox is set and FormSubmit's activation link is clicked).
-2. **Domain**: register `jrliquormart.com`, point DNS at GitHub Pages, keep `CNAME`.
+2. **Domain**: register `jrliquormart.com`, point DNS at GitHub Pages, then rename
+   `CNAME.hold` back to `CNAME`.
 3. **Worker deploy** (chat AI): `cd worker && wrangler login && wrangler secret put
    ANTHROPIC_API_KEY && wrangler deploy`; once DNS is on Cloudflare, uncomment the
    `chat.jrliquormart.com` route block in `wrangler.jsonc` (PLAYBOOK §6). Set a spend cap.
