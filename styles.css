@@ -149,7 +149,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .tile:hover[data-full]::after{opacity:1;transform:scale(1)}
 
 /* ---- service grid (home) ---- */
-.svc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}   /* 5 carry categories = 5 cells */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}   /* 6 cards: 3x2 desktop, 2x3 phones */
 .svc{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 24px 24px;
   transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .3s;position:relative;overflow:hidden}
 .svc::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}

@@ -17,7 +17,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date
 
-CSSV = "styles.css?v=2"   # bump on ANY css change
+CSSV = "styles.css?v=3"   # bump on ANY css change
 JSV  = "app.js?v=1"       # bump on ANY app.js change
 CHATV= "chat.js?v=1"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -86,6 +86,7 @@ ICON = {
  "shot":   _svg('<path d="M8 8.5h8L14.7 21a1 1 0 0 1-1 .9h-3.4a1 1 0 0 1-1-.9z"/><path d="M9 12.5h6"/><circle cx="17" cy="4.5" r="2.3"/><path d="M17 2.2v4.6M14.7 4.5h4.6"/>'),
  "wine":   _svg('<path d="M8 2.5h8c0 5.2-1.6 8.5-4 8.5s-4-3.3-4-8.5z"/><path d="M12 11v9M8.5 21.5h7M8.4 6h7.2"/>'),
  "bag":    _svg('<path d="M6 7.5h12l1 12.5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M9 10.5V6a3 3 0 0 1 6 0v4.5"/>'),
+ "truck":  _svg('<path d="M10 17h4V5H2v12h3M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h1"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/>'),
  "pin":    _svg('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/>'),
  "snow":   _svg('<path d="M12 3v18M12 3l-2.2 2.2M12 3l2.2 2.2M12 21l-2.2-2.2M12 21l2.2-2.2M4.2 7.5l15.6 9M4.2 7.5l3 .3M4.2 7.5l.3 3M19.8 16.5l-3-.3M19.8 16.5l-.3-3M19.8 7.5L4.2 16.5M19.8 7.5l-3 .3M19.8 7.5l.3 3M4.2 16.5l3-.3M4.2 16.5l.3-3"/>'),
  "star":   _svg('<path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.6 3.2L6.7 14 1.7 9.4l7-.9z"/>'),
@@ -112,6 +113,9 @@ SERVICES = [
  ("snacks-extras","bag","Snacks & Extras","Snacks, cold sodas and energy drinks by the register.",
   "The quick-stop side of the store: snacks, cold sodas and energy drinks, right by the register. In and out in a minute, with free parking just outside the door.",
   ["Snacks","Cold sodas and energy drinks","In and out in a minute","Free parking lot outside"]),
+ ("delivery-pickup","truck","Delivery & Pickup","Same-day delivery through the apps, or curbside pickup out front.",
+  "Partnered with the delivery apps for same-day delivery, in the store's own words. Prefer to swing by? Curbside and in-store pickup are both easy, with Apple Pay and contactless at the register.",
+  ["Same-day delivery via the apps","Curbside and in-store pickup","Apple Pay and contactless","Free parking lot"]),
 ]
 # services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
 _SVC_PHOTO = {
@@ -120,6 +124,7 @@ _SVC_PHOTO = {
  "tequila-agave":   ("shelf","tequila-limes.jpg","Tequila shots with lime and salt"),
  "wine":            ("store","wine-dark.jpg","Wine bottles on a dark shelf"),
  "snacks-extras":   ("store","snack-wall.jpg","A wall of snacks"),
+ "delivery-pickup": ("store","delivery-bag.jpg","A bottle packed in a paper carrier bag"),
 }
 
 # why-choose-us: (icon, title, body) — each grounded in a quoted public review
@@ -322,8 +327,8 @@ def home():
 
 <section class="section"><div class="wrap">
   <div class="sec-head center reveal">
-    <h2>Five corners of one good stop</h2>
-    <p>From the bourbon wall to the snack rack, here's what's inside.</p></div>
+    <h2>One good stop, corner to corner</h2>
+    <p>From the bourbon wall to same-day delivery, here's what's inside.</p></div>
   <div class="svc-grid stagger reveal">{svc}</div>
 </div></section>
 
@@ -363,7 +368,7 @@ def services():
                 "services","services.html") + nav("services.html") + f'''
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">What we carry</span><h1>Five corners of the store</h1>
+  <span class="eyebrow">What we carry</span><h1>The whole store, corner to corner</h1>
   <p>Hunting a specific bottle? Call and we'll check the shelf before you drive over.</p>
 </div></section>
 <section class="section" style="padding-top:40px"><div class="wrap">

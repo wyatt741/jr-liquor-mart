@@ -30,7 +30,7 @@ quotes; bracketed letters mark corrected typos only.
 
 ## Intake decisions (2026-07-26, confirmed with Wyatt)
 - Dark default + amber bourbon palette, Fraunces display (light mode: cream + espresso).
-- Pages: Home, What We Carry (5 category cards), Gallery (placeholder tiles), About, Contact.
+- Pages: Home, What We Carry (6 cards: 5 categories + Delivery & Pickup, added 2026-07-26 for an even grid), Gallery (licensed stock photos), About, Contact.
 - Reviews: 6 real verbatim quotes (3 named Yelp, 3 anonymous Google-mirror), stars per review.
 - Hero badge: "Old Town Local, Est. 1997". No star-rating claims on the site.
 - Marquee: category chips only (no brand names until the owner confirms a stock list).

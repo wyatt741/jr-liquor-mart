@@ -22,6 +22,7 @@ generic captions, not photos of JR Liquor Mart itself; owner photos replace them
 | wine-rack.jpg | Ata Ebem | https://www.pexels.com/photo/bottles-of-wine-stacked-on-shelf-11021166/ |
 | snack-wall.jpg | Allen Boguslavsky | https://www.pexels.com/photo/a-shelf-with-snacks-and-snacks-on-it-27939229/ |
 | snack-run.jpg | Rosse Marie Beringuel | https://www.pexels.com/photo/assorted-snacks-10114270/ |
+| delivery-bag.jpg | Cup of Couple | https://www.pexels.com/photo/bottle-of-wine-in-brown-paper-bag-8472741/ |
 
 Generated assets (not photographs): favicon.ico, assets/favicon.png,
 assets/apple-touch-icon.png, assets/logo.png (Pillow-generated JR monogram).
