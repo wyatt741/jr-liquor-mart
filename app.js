@@ -18,6 +18,16 @@ document.querySelectorAll('.theme-toggle').forEach(btn => {
   });
 });
 
+// Re-anchor a hash landing after fonts settle (one-page layout: sections shift as the
+// display font swaps in, so the browser's initial hash jump can land short)
+if (location.hash) {
+  const target = document.querySelector(location.hash);
+  if (target) window.addEventListener('load', () => {
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
+      .then(() => target.scrollIntoView());
+  });
+}
+
 // Scroll reveals
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });

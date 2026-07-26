@@ -527,7 +527,13 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .order-doordash{--oc:#eb1700}
 .order-grubhub{--oc:#e04b3a}
 .order-ubereats{--oc:#06864a}
+.order-postmates{--oc:#191919}
 .order-pickup{--oc:var(--pink)}
+
+/* standalone order band under the hero (one-page layout) */
+.order-sec{padding:24px 0;border-block:1px solid var(--line);background:var(--paper2)}
+.order-sec .order-bar{margin-top:0;justify-content:center}
+@media(max-width:560px){.order-sec .order-bar{align-items:center}}
 
 /* Menu page: category headings + price rows with leader dots */
 .menu-cat{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}

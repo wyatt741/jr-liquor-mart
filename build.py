@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-"""JR LIQUOR MART (Camarillo, CA) — one Python generator -> 5 static pages + sitemap/robots.
-Run:  python3 build.py    (emits index/services/gallery/about/contact + sitemap/robots)
+"""JR LIQUOR MART (Camarillo, CA) — one Python generator -> ONE-PAGE site + sitemap/robots.
+Run:  python3 build.py    (emits index.html + redirect stubs for the old page URLs)
 Edit CONTENT here, never hand-edit the generated HTML. Deploy = git push (GitHub Pages).
 
 Built from Wyatt's site-template (see that repo's PLAYBOOK.md). Content is sourced from
 the 2026-07-26 research brief (docs/RESEARCH_BRIEF.md): every claim traces to a public
 source or the owner. House rules: no fabricated content, no em dashes.
 
-Intake decisions (2026-07-26): dark default + amber/bourbon palette, Fraunces display;
-pages = Home, What We Carry, Gallery (placeholder tiles), About, Contact; reviews = real
-verbatim quotes; marquee = category chips (no brand-name claims); no order/menu module;
+Decisions (2026-07-26, confirmed with Wyatt): dark default + amber/bourbon palette,
+Fraunces display; ONE-PAGE layout (was 5 pages; old URLs 301-style stub-redirect to the
+matching section); sections = hero, order band, marquee, What We Carry (6 cards),
+Gallery, Why, About, Reviews (real verbatim quotes), Contact + map; ORDER buttons link
+the store's VERIFIED delivery storefronts (it lists as "JR Food Mart" on Uber Eats and
+Postmates, "Jr Liquor & Convenience" on Grubhub; no DoorDash storefront found);
 hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deployed).
 """
 
@@ -17,8 +20,8 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date
 
-CSSV = "styles.css?v=3"   # bump on ANY css change
-JSV  = "app.js?v=1"       # bump on ANY app.js change
+CSSV = "styles.css?v=4"   # bump on ANY css change
+JSV  = "app.js?v=2"       # bump on ANY app.js change
 CHATV= "chat.js?v=1"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
@@ -65,10 +68,10 @@ LD_JSON = json.dumps({
   "sameAs":[s for s in (INSTAGRAM,FACEBOOK,TIKTOK) if s],
 }, separators=(",",":"))
 
-# Contact lives in the header nav; the animated "Call the store" button is the primary CTA
-# (call-first business, one CTA intent site-wide).
-NAV = [("index.html","Home"),("services.html","What We Carry"),("gallery.html","Gallery"),
-       ("about.html","About"),("contact.html","Contact")]
+# One-page nav: anchors into index.html sections. The animated "Call the store" button
+# stays the primary CTA (call-first business, one CTA intent site-wide).
+NAV = [("#top","Home"),("#carry","What We Carry"),("#gallery","Gallery"),
+       ("#about","About"),("#contact","Contact")]
 FOOT_NAV = NAV
 
 # ---- dark-mode: default dark, toggle persists to localStorage ----
@@ -153,6 +156,23 @@ def brand_chip(kind, f, n):
     if kind == "img":
         return f'<span class="brand-chip"><img src="assets/{f}" alt="{n}" loading="lazy"></span>'
     return f'<span class="brand-chip brand-chip-txt">{n}</span>'
+
+# ---- ORDER: VERIFIED live delivery storefronts (checked 2026-07-26). The store lists as
+# "JR Food Mart" on Uber Eats/Postmates (same storefront) and "Jr Liquor & Convenience"
+# on Grubhub, all at 2616 Ventura Blvd. NO DoorDash storefront was found in any search;
+# add it here only with a real link from the owner. ----
+ORDER = [
+ ("Uber Eats", "https://www.ubereats.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
+ ("Postmates", "https://postmates.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
+ ("Grubhub",   "https://www.grubhub.com/restaurant/jr-liquor--convenience-2616-ventura-blvd-camarillo/2353021"),
+]
+_ORDER_SLUG = {"doordash":"doordash","grubhub":"grubhub","uber eats":"ubereats","ubereats":"ubereats","postmates":"postmates"}
+def order_bar(cls=""):
+    if not ORDER: return ""
+    btns = "".join(
+        f'<a class="order-btn order-{_ORDER_SLUG.get(n.lower(),"pickup")}" href="{u}" target="_blank" rel="noopener">{n}<span class="btn-ic">&rarr;</span></a>'
+        for n,u in ORDER)
+    return f'<div class="order-bar{" "+cls if cls else ""}"><span class="order-lbl">Order delivery</span><div class="order-btns">{btns}</div></div>'
 
 # REAL public reviews, quoted verbatim (sources in docs/RESEARCH_BRIEF.md).
 # (name, context, quote, stars). Bracketed letters mark a corrected typo, nothing else is edited.
@@ -294,49 +314,62 @@ def footer():
 <script src="{JSV}"></script>
 <script src="{CHATV}"></script></body></html>'''
 
-# ============================ PAGES ============================
+# ============================ THE PAGE (one-page site) ============================
 def home():
-    svc = "".join(f'''<a class="svc" href="services.html#{s[0]}">
-        <span class="ic-badge">{icon(s[1])}</span><h3>{s[2]}</h3><p>{s[3]}</p>
-        <span class="svc-more">Explore<span class="btn-ic">&rarr;</span></span></a>''' for s in SERVICES)
     brow = "".join(brand_chip(*b) for b in BRANDS); brands = brow + brow
-    teaser = "".join(photo(c,f,l) for c,f,l in GALLERY[:6])
     feats = "".join(f'<div class="feat"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div>' for k,t,d in FEATURES)
     tst = "".join(
         f'<blockquote class="tst"><div class="tst-stars">{"★"*s}</div><p>&ldquo;{q}&rdquo;</p><cite>{n}<span>{r}</span></cite></blockquote>'
         for n,r,q,s in TESTIMONIALS)
+    cards = ""
+    for sid,ic,title,short,long,bullets in SERVICES:
+        bl = "".join(f"<li>{b}</li>" for b in bullets)
+        pcat, pfile, palt = _SVC_PHOTO.get(sid, ("store","snack-wall.jpg",title))
+        act = order_bar() if sid == "delivery-pickup" else \
+              f'<a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>'
+        cards += f'''<article class="prod-card" id="{sid}">
+        <div class="prod-img">{photo(pcat,pfile,palt)}</div>
+        <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2>
+        <p>{long}</p><ul class="ticks">{bl}</ul>
+        {act}</div>
+      </article>'''
+    filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
+    tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
+    svc_opts = "".join(f"<option>{s[2]}</option>" for s in SERVICES)
     return head(f"{BIZ} | Liquor Store in Old Town Camarillo, CA",
-                f"{TAG}. The bourbon wall, the walk-in Beer Cave, wine, tequila and snacks. Call {PHONE}.",
-                "home","index.html") + nav("index.html") + f'''
+                f"{TAG}. The bourbon wall, the walk-in Beer Cave, wine, tequila and snacks, with same-day delivery. Call {PHONE}.",
+                "home","") + nav("#top") + f'''
 <main id="main">
-<section class="hero"><div class="wrap hero-in">
+<section class="hero" id="top"><div class="wrap hero-in">
   <div class="hero-copy reveal">
     <span class="eyebrow">Old Town Local &middot; Est. 1997</span>
     <h1>The bourbon wall, the <span class="hl">Beer Cave</span>, and a counter that knows your name.</h1>
     <p>Keeping Old Town Camarillo stocked and cold since 1997, with same-day delivery and curbside pickup.</p>
     <div class="hero-btns"><a class="btn btn-primary btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
-    <a class="btn btn-ghost btn-lg" href="services.html">See what we carry</a></div>
+    <a class="btn btn-ghost btn-lg" href="#carry">See what we carry</a></div>
   </div>
   <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf")}</div></div>
 </div></section>
+
+<section class="order-sec"><div class="wrap">{order_bar("order-center")}</div></section>
 
 <section class="brands"><div class="wrap brands-in">
   <span class="brands-label">Inside the store</span>
   <div class="brands-marquee"><div class="brands-track">{brands}</div></div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section" id="carry"><div class="wrap">
   <div class="sec-head center reveal">
     <h2>One good stop, corner to corner</h2>
-    <p>From the bourbon wall to same-day delivery, here's what's inside.</p></div>
-  <div class="svc-grid stagger reveal">{svc}</div>
+    <p>Hunting a specific bottle? Call and we'll check the shelf before you drive over.</p></div>
+  <div class="prod-grid stagger reveal">{cards}</div>
 </div></section>
 
-<section class="section band"><div class="wrap">
-  <div class="sec-head reveal"><h2>A taste of the good stuff</h2>
-    <p>Stock photography holding the spot until we shoot the real shelves. The vibe is accurate.</p></div>
-  <div class="gal-grid gal-teaser stagger reveal">{teaser}</div>
-  <div class="center"><a class="btn btn-dark btn-lg" href="gallery.html">View the full gallery<span class="btn-ic">&rarr;</span></a></div>
+<section class="section band" id="gallery"><div class="wrap">
+  <div class="sec-head center reveal"><h2>A taste of the good stuff</h2>
+    <p>Licensed stock shots holding the spot until we shoot the real shelves.</p></div>
+  <div class="gfilters reveal">{filt}</div>
+  <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -344,65 +377,9 @@ def home():
   <div class="feat-grid stagger reveal">{feats}</div>
 </div></section>
 
-<section class="section band"><div class="wrap">
-  <div class="sec-head center reveal"><span class="eyebrow">Real reviews</span><h2>What customers say</h2>
-    <p class="sample-note">Quoted word for word from public Yelp and Google reviews.</p></div>
-  <div class="tst-grid stagger reveal">{tst}</div>
-</div></section>
-</main>
-{cta()}{footer()}'''
-
-def services():
-    cards = ""
-    for sid,ic,title,short,long,bullets in SERVICES:
-        bl = "".join(f"<li>{b}</li>" for b in bullets)
-        pcat, pfile, palt = _SVC_PHOTO.get(sid, ("store","snack-wall.jpg",title))
-        cards += f'''<article class="prod-card" id="{sid}">
-        <div class="prod-img">{photo(pcat,pfile,palt)}</div>
-        <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2>
-        <p>{long}</p><ul class="ticks">{bl}</ul>
-        <a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a></div>
-      </article>'''
-    return head(f"What We Carry | {BIZ}",
-                f"Bourbon and whiskey, the walk-in Beer Cave, tequila, wine and snacks at {BIZ} in Camarillo. Call {PHONE} to check a bottle.",
-                "services","services.html") + nav("services.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">What we carry</span><h1>The whole store, corner to corner</h1>
-  <p>Hunting a specific bottle? Call and we'll check the shelf before you drive over.</p>
-</div></section>
-<section class="section" style="padding-top:40px"><div class="wrap">
-  <div class="prod-grid stagger reveal">{cards}</div>
-</div></section>
-</main>{cta()}{footer()}'''
-
-def gallery():
-    filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
-    tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
-    return head(f"Gallery | {BIZ}",
-                f"A look inside {BIZ} in Old Town Camarillo: the remodeled store, the Beer Cave and the shelves.",
-                "gallery","gallery.html") + nav("gallery.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Gallery</span><h1>The good stuff</h1>
-  <p>Licensed stock shots for now, real photos of our own remodel, cave and shelves are on the way.</p>
-</div></section>
-<section class="section"><div class="wrap">
-  <div class="gfilters reveal">{filt}</div>
-  <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
-</div></section>
-</main>
-<div class="lightbox" id="lightbox" aria-hidden="true"><button class="lb-close" aria-label="Close">&times;</button><img src="" alt=""></div>
-{cta()}{footer()}'''
-
-def about():
-    return head(f"About | {BIZ}",
-                f"{BIZ} has held down the same corner of E Ventura Blvd in Old Town Camarillo since 1997.",
-                "about","about.html") + nav("about.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal"><span class="eyebrow">About</span><h1>Old Town local since 1997</h1></div></section>
-<section class="section"><div class="wrap about-in">
+<section class="section band" id="about"><div class="wrap about-in">
   <div class="about-copy reveal">
+    <h2>Old Town local since 1997</h2>
     <p class="lead">JR Liquor Mart has held down the same corner of E Ventura Blvd since 1997.</p>
     <p>The store got a full remodel a few years back, and customers noticed: clean, organized, stocked deep and always cold. The bourbon wall and the walk-in Beer Cave are the two corners people talk about most, and the counter treats regulars like friends.</p>
     <p>Next door is JR Smoke Zone, our sister shop. Between the two, this corner of Old Town has you covered.</p>
@@ -414,17 +391,17 @@ def about():
   </div>
   <div class="about-art reveal d1"><div class="art-frame">{photo("store","night-window.jpg","Bottles in a shop window at night")}</div></div>
 </div></section>
-</main>{cta()}{footer()}'''
 
-def contact():
-    svc_opts = "".join(f"<option>{s[2]}</option>" for s in SERVICES)
-    return head(f"Contact | {BIZ}",
-                f"Call, text or visit {BIZ} at {ADDR}. {HOURS}. {PHONE}.",
-                "contact","contact.html") + nav("contact.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal"><span class="eyebrow">Contact</span><h1>Come by or call</h1>
-  <p>2616 E Ventura Blvd Unit 106, in Old Town Camarillo. {HOURS}.</p></div></section>
-<section class="section"><div class="wrap contact-in">
+<section class="section"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">Real reviews</span><h2>What customers say</h2>
+    <p class="sample-note">Quoted word for word from public Yelp and Google reviews.</p></div>
+  <div class="tst-grid stagger reveal">{tst}</div>
+</div></section>
+
+<section class="section band" id="contact"><div class="wrap">
+  <div class="sec-head center reveal"><h2>Come by or call</h2>
+    <p>2616 E Ventura Blvd Unit 106, in Old Town Camarillo. {HOURS}.</p></div>
+  <div class="contact-in">
   <form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
     <input type="hidden" name="_subject" value="New message from jrliquormart.com">
     <input type="hidden" name="_template" value="table">
@@ -440,30 +417,46 @@ def contact():
   </form>
   <aside class="contact-side reveal d1">
     <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
-    <div class="cside-card"><h3>Delivery &amp; pickup</h3><p>Same-day delivery and curbside pickup through the delivery apps, or park free in the lot and come in.</p></div>
+    <div class="cside-card"><h3>Delivery &amp; pickup</h3><p>Same-day delivery through <a href="{ORDER[0][1]}" target="_blank" rel="noopener">Uber Eats</a>, <a href="{ORDER[1][1]}" target="_blank" rel="noopener">Postmates</a> or <a href="{ORDER[2][1]}" target="_blank" rel="noopener">Grubhub</a> (we're listed as JR Food Mart), or park free in the lot and come in.</p></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
   </aside>
+  </div>
 </div></section>
 <section class="map-sec"><iframe src="{MAP_EMBED}" title="{BIZ} location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section>
-</main>{footer()}'''
+</main>
+<div class="lightbox" id="lightbox" aria-hidden="true"><button class="lb-close" aria-label="Close">&times;</button><img src="" alt=""></div>
+{cta()}{footer()}'''
 
 # ============================ BUILD ============================
-PAGES = {"index.html":home,"services.html":services,"gallery.html":gallery,"about.html":about,"contact.html":contact}
+PAGES = {"index.html": home}
+# Old multi-page URLs live on as instant redirects into their one-page sections
+# (kept out of the sitemap, noindexed, canonical -> the front page).
+STUBS = {"services.html":("#carry","What We Carry"),"gallery.html":("#gallery","Gallery"),
+         "about.html":("#about","About"),"contact.html":("#contact","Contact")}
+
+def stub(anchor, title):
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title} | {BIZ}</title><meta name="robots" content="noindex">
+<link rel="canonical" href="{BASE}/">
+<meta http-equiv="refresh" content="0;url=index.html{anchor}">
+</head><body><p>This page moved to the front page. <a href="index.html{anchor}">Continue to {BIZ}</a>.</p></body></html>'''
 
 def sitemap():
     today = date.today().isoformat()
-    urls = "".join(f"<url><loc>{BASE}/{p}</loc><lastmod>{today}</lastmod>"
-                   f"<priority>{'1.0' if p=='index.html' else '0.8'}</priority></url>" for p in PAGES)
-    return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
+    return (f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            f"<url><loc>{BASE}/</loc><lastmod>{today}</lastmod><priority>1.0</priority></url></urlset>")
 
 def build():
     for fn, f in PAGES.items():
         open(fn,"w",encoding="utf-8").write(f())
+    for fn,(anchor,title) in STUBS.items():
+        open(fn,"w",encoding="utf-8").write(stub(anchor,title))
     open("sitemap.xml","w",encoding="utf-8").write(sitemap())
     open("robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: https://{DOMAIN}/sitemap.xml\n")
-    print("built:", ", ".join(PAGES), "+ sitemap.xml, robots.txt")
+    print("built: index.html + redirect stubs:", ", ".join(STUBS), "+ sitemap.xml, robots.txt")
 
 if __name__ == "__main__":
     build()
