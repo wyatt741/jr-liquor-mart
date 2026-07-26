@@ -33,7 +33,7 @@
   var WORKER_URL = "https://chat.jrliquormart.com";
   var GREETING = "Hi! I'm the JR Liquor Mart assistant. Ask about hours, delivery, or what we carry.";
   var ANSWERS = {
-    services: "Five corners of the store: bourbon and whiskey, the walk-in Beer Cave, tequila and agave, wine, and snacks. Hunting something specific? I can send the counter a bottle request.",
+    services: "Bourbon and whiskey, the walk-in Beer Cave, tequila and agave, wine, and snacks, plus same-day delivery and curbside pickup through the apps. Hunting something specific? I can send the counter a bottle request.",
     hours:    "We're open daily 8am-10pm at " + ADDR + ". Free parking right outside.",
     price:    "Prices change too often for me to quote here. Call or text " + PHONE + " and the counter will check for you.",
     delivery: "We do same-day delivery and curbside pickup through the delivery apps, or come grab it cold in the store.",
