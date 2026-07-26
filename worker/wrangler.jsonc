@@ -1,0 +1,28 @@
+{
+  // Cloudflare Worker config for the site chat proxy.
+  // The Anthropic key is NOT here - it's a secret: `wrangler secret put ANTHROPIC_API_KEY`
+  "name": "jr-liquor-mart-chat",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-24",
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  // Per-IP rate limiting — ON by default. Native binding: consistent + burst-safe, with
+  // no KV namespace to create and no per-request cost. worker.js gates on env.RL.
+  //   - period MUST be 10 or 60 (seconds) — the API supports only those two windows.
+  //   - namespace_id MUST be unique to THIS worker within your Cloudflare account
+  //     (running several rate-limited workers? give each a different number).
+  "ratelimits": [
+    { "name": "RL", "namespace_id": 1001, "simple": { "limit": 20, "period": 60 } }
+  ]
+
+  // BRANDED CUSTOM DOMAIN (PLAYBOOK §6: serve the bot on chat.jrliquormart.com, never the
+  // *.workers.dev URL). chat.js already points WORKER_URL at chat.jrliquormart.com and falls
+  // back to canned answers until this deploys. Uncomment the block below ONCE the domain's
+  // DNS is on this Cloudflare account, then `wrangler deploy` auto-creates the DNS record +
+  // TLS cert and disables the *.workers.dev URL:
+  //
+  // ,"workers_dev": false
+  // ,"routes": [
+  //   { "pattern": "chat.jrliquormart.com", "custom_domain": true }
+  // ]
+}
