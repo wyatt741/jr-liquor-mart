@@ -36,7 +36,7 @@
     services: "Bourbon and whiskey, the walk-in Beer Cave, tequila and agave, wine, and snacks, plus same-day delivery and curbside pickup through the apps. Hunting something specific? I can send the counter a bottle request.",
     hours:    "We're open daily 8am-10pm at " + ADDR + ". Free parking right outside.",
     price:    "Prices change too often for me to quote here. Call or text " + PHONE + " and the counter will check for you.",
-    delivery: "We do same-day delivery and curbside pickup through the delivery apps, or come grab it cold in the store.",
+    delivery: "Same-day delivery through Uber Eats, Postmates or Grubhub (we're listed as JR Food Mart), plus curbside pickup at the store. Order links are on the site, or come grab it cold in person.",
     contact:  "Call or text " + PHONE + ", or use the form on the contact page. Want me to send the counter a bottle request instead?",
     thanks:   "Anytime! Anything else I can check for you?",
     fallback: "Good question. The counter will know for sure, call or text " + PHONE + ". Or I can send them a bottle request."

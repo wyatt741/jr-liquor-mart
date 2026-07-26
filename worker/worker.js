@@ -44,7 +44,7 @@ const SYSTEM = `You are the website assistant for JR Liquor Mart, a neighborhood
 - Tequila and agave: margarita staples to sipping bottles.
 - Wine: reds, whites and bubbly.
 - Snacks and extras: snacks, cold sodas and energy drinks by the register.
-- Delivery and pickup: same-day delivery through the delivery apps, curbside and in-store pickup.
+- Delivery and pickup: same-day delivery through Uber Eats, Postmates or Grubhub (the store is listed there as "JR Food Mart" / "Jr Liquor & Convenience"), plus curbside and in-store pickup. Order buttons are on the site.
 - For "is bottle X in stock", route to a call or the contact form's bottle request; stock changes daily.
 
 === HOW TO TALK ===
