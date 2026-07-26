@@ -23,7 +23,7 @@ quotes; bracketed letters mark corrected typos only.
 | `styles.css` | Theme v2 rethemed: "black and tan" dark default, amber/bourbon accents (`--pink` slots hold amber `#e2a33d`/`#9a6410`), Fraunces display + Plus Jakarta Sans. `?v=1`. |
 | `app.js`, `chat.js` | Template JS. `chat.js` is in HYBRID AI mode: `WORKER_URL = https://chat.jrliquormart.com`, canned answers as automatic fallback (bot works before the worker deploys). `?v=1`. |
 | `worker/` | Cloudflare Worker for the AI chat (filled for JR). Not yet deployed. |
-| `assets/` | Placeholder monogram favicons only. NO real photos yet; pages use `tile()` gradient placeholders. |
+| `assets/` | Licensed Pexels stock photos (credits in `LICENSES.md`) + monogram favicons + `og-image.jpg` + `logo.png`. Stock shots are CATEGORY imagery with generic captions, never presented as JR's own store. |
 | `docs/RESEARCH_BRIEF.md` | The sourced research brief the whole site is built from. |
 | `docs/PROJECT_STATE.md` | Status + open items. Read this to resume. |
 | `CNAME.hold` | `jrliquormart.com`, parked. Rename to `CNAME` once the domain is registered and DNS points at GitHub Pages (until then a live CNAME would redirect the github.io preview to a dead domain). |
@@ -49,9 +49,10 @@ quotes; bracketed letters mark corrected typos only.
 3. **Worker deploy** (chat AI): `cd worker && wrangler login && wrangler secret put
    ANTHROPIC_API_KEY && wrangler deploy`; once DNS is on Cloudflare, uncomment the
    `chat.jrliquormart.com` route block in `wrangler.jsonc` (PLAYBOOK §6). Set a spend cap.
-4. **Photos**: get owner photos (or shoot: storefront, Beer Cave, bourbon wall), drop in
-   `assets/`, switch `tile()` to `photo()`, delete the placeholders CSS block. Also add
-   `assets/og-image.jpg` (1200x630) + `assets/logo.png` for the SEO block.
+4. **Owner photos**: licensed stock (see `LICENSES.md`) now fills every slot, og-image and
+   logo.png exist. Still get real shots of the storefront, Beer Cave and bourbon wall; swap
+   files in `GALLERY`/`_SVC_PHOTO`/hero/about and update captions to say "our" shelves
+   (never caption stock as the real store). A real logo should replace the monogram.
 5. **Verify hours + Google review count with the owner** before wider promotion; consider
    asking the owner about their Google listing.
 
