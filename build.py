@@ -113,8 +113,14 @@ SERVICES = [
   "The quick-stop side of the store: snacks, cold sodas and energy drinks, right by the register. In and out in a minute, with free parking just outside the door.",
   ["Snacks","Cold sodas and energy drinks","In and out in a minute","Free parking lot outside"]),
 ]
-# services() page tile category per card id (placeholder gradient family)
-_SVC_TILE = {"bourbon-whiskey":"shelf","beer-cave":"cave","tequila-agave":"shelf","wine":"shelf","snacks-extras":"store"}
+# services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
+_SVC_PHOTO = {
+ "bourbon-whiskey": ("shelf","backbar-glow.jpg","Spirits lined up on a lit back bar"),
+ "beer-cave":       ("cave","beer-ice.jpg","Beer bottles buried in ice"),
+ "tequila-agave":   ("shelf","tequila-limes.jpg","Tequila shots with lime and salt"),
+ "wine":            ("store","wine-dark.jpg","Wine bottles on a dark shelf"),
+ "snacks-extras":   ("store","snack-wall.jpg","A wall of snacks"),
+}
 
 # why-choose-us: (icon, title, body) — each grounded in a quoted public review
 FEATURES = [
@@ -124,14 +130,15 @@ FEATURES = [
  ("heart","A counter that knows you","Fast, friendly service that treats regulars like friends."),
 ]
 
-# gallery tiles: (category, label). Placeholder gradient tiles until real photos land in
-# assets/ (then switch tile() -> photo() and shoot the real thing). Categories match GCATS.
+# gallery photos: (category, assets file, caption). LICENSED STOCK (Pexels, LICENSES.md).
+# Captions stay generic on purpose: these are category shots, NOT photos of JR's own store.
+# When the owner's real photos arrive, swap files and captions can finally say "our" shelves.
 GALLERY = [
- ("store","The remodeled storefront"),("cave","Inside the Beer Cave"),("shelf","The bourbon wall"),
- ("store","Behind the counter"),("cave","The IPA section"),("shelf","Top-shelf spirits"),
- ("store","Old Town Camarillo"),("cave","Grab-and-go cold"),("shelf","The wine racks"),
+ ("shelf","top-shelf.jpg","The top shelf"),("cave","beer-ice.jpg","Buried in ice"),("shelf","back-bar.jpg","The back bar"),
+ ("store","wine-cubbies.jpg","Wine, resting"),("cave","ice-cold-can.jpg","Ice cold"),("store","wine-rack.jpg","Reds in the rack"),
+ ("shelf","backlit-bottles.jpg","Backlit bottles"),("cave","bottle-on-ice.jpg","Cold one, ready"),("store","snack-run.jpg","Snack run"),
 ]
-GCATS = [("all","Everything"),("store","The Store"),("cave","Beer Cave"),("shelf","The Shelves")]
+GCATS = [("all","Everything"),("shelf","The Shelves"),("cave","Served Cold"),("store","Wine & Extras")]
 
 # marquee: category chips only (intake decision). No brand-name claims until the owner
 # confirms a stocked-brands list. ("txt", None, label) or ("img","file.png","Alt").
@@ -288,7 +295,7 @@ def home():
         <span class="ic-badge">{icon(s[1])}</span><h3>{s[2]}</h3><p>{s[3]}</p>
         <span class="svc-more">Explore<span class="btn-ic">&rarr;</span></span></a>''' for s in SERVICES)
     brow = "".join(brand_chip(*b) for b in BRANDS); brands = brow + brow
-    teaser = "".join(tile(c,l) for c,l in GALLERY[:6])
+    teaser = "".join(photo(c,f,l) for c,f,l in GALLERY[:6])
     feats = "".join(f'<div class="feat"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div>' for k,t,d in FEATURES)
     tst = "".join(
         f'<blockquote class="tst"><div class="tst-stars">{"★"*s}</div><p>&ldquo;{q}&rdquo;</p><cite>{n}<span>{r}</span></cite></blockquote>'
@@ -305,7 +312,7 @@ def home():
     <div class="hero-btns"><a class="btn btn-primary btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
     <a class="btn btn-ghost btn-lg" href="services.html">See what we carry</a></div>
   </div>
-  <div class="hero-art reveal d1"><div class="hero-frame">{tile("shelf","The bourbon wall",True)}</div></div>
+  <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf")}</div></div>
 </div></section>
 
 <section class="brands"><div class="wrap brands-in">
@@ -321,8 +328,8 @@ def home():
 </div></section>
 
 <section class="section band"><div class="wrap">
-  <div class="sec-head reveal"><h2>A look inside</h2>
-    <p>The remodel, the Beer Cave, the shelves. Real photos are coming; these tiles hold their spots.</p></div>
+  <div class="sec-head reveal"><h2>A taste of the good stuff</h2>
+    <p>Stock photography holding the spot until we shoot the real shelves. The vibe is accurate.</p></div>
   <div class="gal-grid gal-teaser stagger reveal">{teaser}</div>
   <div class="center"><a class="btn btn-dark btn-lg" href="gallery.html">View the full gallery<span class="btn-ic">&rarr;</span></a></div>
 </div></section>
@@ -344,8 +351,9 @@ def services():
     cards = ""
     for sid,ic,title,short,long,bullets in SERVICES:
         bl = "".join(f"<li>{b}</li>" for b in bullets)
+        pcat, pfile, palt = _SVC_PHOTO.get(sid, ("store","snack-wall.jpg",title))
         cards += f'''<article class="prod-card" id="{sid}">
-        <div class="prod-img">{tile(_SVC_TILE.get(sid,"store"),title)}</div>
+        <div class="prod-img">{photo(pcat,pfile,palt)}</div>
         <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2>
         <p>{long}</p><ul class="ticks">{bl}</ul>
         <a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a></div>
@@ -365,14 +373,14 @@ def services():
 
 def gallery():
     filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
-    tiles = "".join(tile(c,l) for c,l in GALLERY)
+    tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
     return head(f"Gallery | {BIZ}",
                 f"A look inside {BIZ} in Old Town Camarillo: the remodeled store, the Beer Cave and the shelves.",
                 "gallery","gallery.html") + nav("gallery.html") + f'''
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Gallery</span><h1>See the store</h1>
-  <p>Placeholder tiles for now. Real photos of the remodel, the cave and the shelves are on the way.</p>
+  <span class="eyebrow">Gallery</span><h1>The good stuff</h1>
+  <p>Licensed stock shots for now, real photos of our own remodel, cave and shelves are on the way.</p>
 </div></section>
 <section class="section"><div class="wrap">
   <div class="gfilters reveal">{filt}</div>
@@ -399,7 +407,7 @@ def about():
       <div><strong>Old Town</strong><span>E Ventura Blvd, Camarillo</span></div>
     </div>
   </div>
-  <div class="about-art reveal d1"><div class="art-frame">{tile("store","A photo of the shop")}</div></div>
+  <div class="about-art reveal d1"><div class="art-frame">{photo("store","night-window.jpg","Bottles in a shop window at night")}</div></div>
 </div></section>
 </main>{cta()}{footer()}'''
 
