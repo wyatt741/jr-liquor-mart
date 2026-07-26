@@ -496,8 +496,11 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
    REBRAND: change --pink / --pink-deep / --grad + the two font families above. */
 
 /* placeholder logo: gradient initial square + wordmark (brandmark() in build.py) */
-.brand-b{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--grad);
-  color:#fff;font-family:var(--disp);font-weight:800;font-size:1.12rem;letter-spacing:.01em;line-height:1;flex-shrink:0}
+/* roundel placeholder mark: liquor-label energy (circle, hairline inner ring, serif JR).
+   Still a placeholder; swap for the owner's real logo file when one exists. */
+.brand-b{position:relative;display:grid;place-items:center;width:46px;height:46px;border-radius:100px;background:var(--grad);
+  color:#fff;font-family:var(--disp);font-weight:700;font-size:1.02rem;letter-spacing:.05em;line-height:1;flex-shrink:0}
+.brand-b::after{content:"";position:absolute;inset:3px;border-radius:100px;border:1px solid rgba(255,255,255,.42)}
 
 /* gradient placeholder tiles: tile() in build.py renders these instead of <img> */
 .tile-ph{position:relative;aspect-ratio:4/3;display:grid;place-items:center;isolation:isolate;overflow:hidden}
@@ -510,8 +513,10 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .tile-swap{position:absolute;top:10px;right:12px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
   color:#fff;background:rgba(0,0,0,.32);padding:3px 8px;border-radius:100px}
 .hero-frame .tile-ph,.art-frame .tile-ph{width:100%;border-radius:calc(var(--r-xl) - 8px)}
+/* framed feature photos speak for themselves; captions stay on gallery tiles only */
+.hero-frame figcaption,.art-frame figcaption{display:none}
 .gal-masonry .tile-ph:nth-child(7n+1){aspect-ratio:4/5}
-@media (max-width:600px){ .brand-b{width:38px;height:38px;font-size:.98rem} .gal-masonry .tile-ph:nth-child(7n+1){aspect-ratio:4/3} }
+@media (max-width:600px){ .brand-b{width:40px;height:40px;font-size:.9rem} .gal-masonry .tile-ph:nth-child(7n+1){aspect-ratio:4/3} }
 
 /* ============================ ORDER + MENU (restaurants/cafes) ============================ */
 /* Order-link buttons (hero + menu page). Renders only when ORDER is populated in build.py. */
@@ -530,10 +535,13 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .order-postmates{--oc:#191919}
 .order-pickup{--oc:var(--pink)}
 
-/* standalone order band under the hero (one-page layout) */
-.order-sec{padding:24px 0;border-block:1px solid var(--line);background:var(--paper2)}
+/* standalone order row under the hero (one-page layout): seamless, centered, no label,
+   the branded pills explain themselves */
+.order-sec{padding:0 0 34px}
 .order-sec .order-bar{margin-top:0;justify-content:center}
-@media(max-width:560px){.order-sec .order-bar{align-items:center}}
+.order-sec .order-lbl{display:none}
+.order-sec .order-btns{justify-content:center}
+@media(max-width:560px){.order-sec .order-bar{flex-direction:row;align-items:center;justify-content:center}}
 
 /* Menu page: category headings + price rows with leader dots */
 .menu-cat{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}

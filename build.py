@@ -20,7 +20,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date
 
-CSSV = "styles.css?v=4"   # bump on ANY css change
+CSSV = "styles.css?v=5"   # bump on ANY css change
 JSV  = "app.js?v=2"       # bump on ANY app.js change
 CHATV= "chat.js?v=1"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -218,9 +218,9 @@ def head(title, desc, page="", path="index.html"):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
 <meta name="twitter:image" content="{OG_IMG}">
-<link rel="icon" href="favicon.ico?v=1" sizes="48x48 32x32 16x16">
-<link rel="icon" type="image/png" href="assets/favicon.png?v=1" sizes="256x256">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
+<link rel="icon" href="favicon.ico?v=2" sizes="48x48 32x32 16x16">
+<link rel="icon" type="image/png" href="assets/favicon.png?v=2" sizes="256x256">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
