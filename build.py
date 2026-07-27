@@ -18,7 +18,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 
 # ============================ CONFIG ============================
 import json
-from datetime import date
+from datetime import date, datetime, timezone
 
 CSSV = "styles.css?v=8"   # bump on ANY css change
 JSV  = "app.js?v=3"       # bump on ANY app.js change
@@ -142,13 +142,20 @@ _SVC_PHOTO = {
 # (The template's FEATURES "why choose us" tiles were cut in the 2026-07-27 repetition
 # audit: on a one-pager all four restated the hero, the cards, or the About section.)
 
-# gallery photos: (category, assets file, caption). LICENSED STOCK (Pexels, LICENSES.md).
-# Captions stay generic on purpose: these are category shots, NOT photos of JR's own store.
-# When the owner's real photos arrive, swap files and captions can finally say "our" shelves.
+# gallery photos: (category, assets file, caption). MIXED SOURCES, see LICENSES.md.
+# The four owner photos (2026-07-26, from @jrliquormart, owner-approved) ARE the real store,
+# so their captions may say "our". The rest is licensed stock: category shots that must keep
+# generic captions and must never be described as JR's own store.
 GALLERY = [
- ("shelf","top-shelf.jpg","The top shelf"),("cave","beer-ice.jpg","Buried in ice"),("shelf","back-bar.jpg","The back bar"),
- ("store","wine-cubbies.jpg","Wine, resting"),("cave","ice-cold-can.jpg","Ice cold"),("store","wine-rack.jpg","Reds in the rack"),
- ("shelf","backlit-bottles.jpg","Backlit bottles"),("cave","bottle-on-ice.jpg","Cold one, ready"),("store","snack-run.jpg","Snack run"),
+ ("shelf","frey-ranch-rye.jpg","Frey Ranch rye, in the store"),   # owner photo
+ ("cave","beer-ice.jpg","Buried in ice"),
+ ("shelf","cooler-case.jpg","Our spirits case"),                  # owner photo
+ ("store","sign-welcome.jpg","Our welcome board"),                # owner photo
+ ("cave","ice-cold-can.jpg","Ice cold"),
+ ("store","amigos-display.jpg","New arrivals on the floor"),      # owner photo
+ ("shelf","backlit-bottles.jpg","Backlit bottles"),
+ ("cave","bottle-on-ice.jpg","Cold one, ready"),
+ ("store","wine-rack.jpg","Reds in the rack"),
 ]
 GCATS = [("all","Everything"),("shelf","The Shelves"),("cave","Served Cold"),("store","Wine & Extras")]
 
@@ -442,7 +449,9 @@ def stub(anchor, title):
 </head><body><p>This page moved to the front page. <a href="index.html{anchor}">Continue to {BIZ}</a>.</p></body></html>'''
 
 def sitemap():
-    today = date.today().isoformat()
+    # UTC, not local: remote sessions build on UTC and this Mac on Pacific, so local dates
+    # made <lastmod> jump backwards a day between builds.
+    today = datetime.now(timezone.utc).date().isoformat()
     return (f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
             f"<url><loc>{BASE}/</loc><lastmod>{today}</lastmod><priority>1.0</priority></url></urlset>")
 
