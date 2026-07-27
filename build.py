@@ -21,7 +21,7 @@ import json
 from datetime import date, datetime, timezone
 
 CSSV = "styles.css?v=8"   # bump on ANY css change
-JSV  = "app.js?v=3"       # bump on ANY app.js change
+JSV  = "app.js?v=4"       # bump on ANY app.js change
 CHATV= "chat.js?v=2"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
@@ -132,7 +132,7 @@ SERVICES = [
 # services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
 _SVC_PHOTO = {
  "bourbon-whiskey": ("shelf","backbar-glow.jpg","Spirits lined up on a lit back bar"),
- "beer-cave":       ("cave","beer-cooler.jpg","Rows of cold beer behind cooler glass"),
+ "beer-cave":       ("cave","beer-cave.jpg","A walk-in beer cave lined with lit cooler doors"),
  "tequila-agave":   ("shelf","tequila-limes.jpg","Tequila shots with lime and salt"),
  "wine":            ("store","wine-dark.jpg","Wine bottles on a dark shelf"),
  "snacks-extras":   ("store","snack-wall.jpg","A wall of snacks"),
@@ -197,6 +197,14 @@ def order_bar(cls=""):
         f'<a class="order-btn order-{_ORDER_SLUG.get(n.lower(),"pickup")}" href="{u}" target="_blank" rel="noopener">{n}<span class="btn-ic">&rarr;</span></a>'
         for n,u in ORDER)
     return f'<div class="order-bar{" "+cls if cls else ""}"><span class="order-lbl">Order delivery</span><div class="order-btns">{btns}</div></div>'
+
+def order_links():
+    """Plain text links for the contact aside. Deliberately NOT order_bar()'s pill
+    buttons: the hero already carries the one loud order cluster, and the 2026-07-27
+    merge audit cut duplicate clusters for repeating themselves. Reuses .cside-social
+    (a styled column of links) so this needs no new CSS and no cache-version bump."""
+    if not ORDER: return ""
+    return "".join(f'<a href="{u}" target="_blank" rel="noopener">{n} &rarr;</a>' for n,u in ORDER)
 
 # REAL public reviews, quoted verbatim (sources in docs/RESEARCH_BRIEF.md).
 # (name, context, quote, stars). Bracketed letters mark a corrected typo, nothing else is edited.
@@ -377,7 +385,7 @@ def home():
 
 <section class="section band" id="gallery"><div class="wrap">
   <div class="sec-head center reveal"><h2>A taste of the good stuff</h2>
-    <p>Licensed stock shots holding the spot until we shoot the real shelves.</p></div>
+    <p>Shots from the shop, with licensed stock filling the gaps until we photograph the rest.</p></div>
   <div class="gfilters reveal">{filt}</div>
   <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
 </div></section>
@@ -424,6 +432,7 @@ def home():
     <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
+    <div class="cside-card"><h3>Order delivery</h3><div class="cside-social">{order_links()}</div></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
   </aside>
   </div>

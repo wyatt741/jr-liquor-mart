@@ -31,6 +31,12 @@ just walked into beer heaven" etc.), and their still frames top out at 720p. Ree
 thumbnails from the API are only 360x640, so any Reel-derived still must be extracted from
 the video with ffmpeg.
 
+## AI-generated (not a photograph, not the real store)
+
+| File (assets/) | Model | Notes |
+|---|---|---|
+| `beer-cave.jpg` | `nano_banana_pro` (Higgsfield), 2026-07-26, at Wyatt's direction | Generic walk-in beer cave interior, used as the Beer Cave card image. **Replaced `beer-cooler.jpg`** (Unsplash / wang binghua), which was a washed-out, reflection-blown shot of a single row of Budweiser in what read as a domestic fridge, not a beer cave. Generated 16:9 at 1376x768, then cropped to exactly 4:3 (1024x768) with the window shifted left — that removes the nearest right-hand shelf, whose beer packaging was the only vaguely legible branding. Prompt asked for no text, no logos and illegible labels. Like the stock below, this is **category imagery and must never be captioned as JR's own store**. |
+
 ## Licensed stock
 
 Free for commercial use with no attribution required
