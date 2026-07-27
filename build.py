@@ -274,21 +274,25 @@ def photo(cat, file, label, lightbox=False, eager=False):
             f'<img src="assets/{file}" alt="{label}"{load}><figcaption>{label}</figcaption></figure>')
 
 # ============================ SHARED CHROME ============================
-def head(title, desc, page="", path="index.html"):
+def head(title, desc, page="", path="index.html", social_title=None):
+    # <title> is what SEARCH reads: keep the category keywords there.
+    # og:/twitter: titles are what the SHARE CARD shows: brand + city reads better and
+    # is not a ranking signal, so they are allowed to differ. Defaults to title.
+    social_title = social_title or title
     canon = f"{BASE}/{path}"
     return f'''<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{title}</title><meta name="description" content="{desc}">
 <link rel="canonical" href="{canon}">
 <meta name="robots" content="index,follow">
-<meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
+<meta property="og:title" content="{social_title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="website"><meta property="og:url" content="{canon}">
 <meta property="og:site_name" content="{BIZ}"><meta property="og:image" content="{OG_IMG}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Bottles glowing on an amber-lit shelf">
 <meta property="og:locale" content="en_US"><meta name="theme-color" content="#b8791a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
+<meta name="twitter:title" content="{social_title}"><meta name="twitter:description" content="{desc}">
 <meta name="twitter:image" content="{OG_IMG}">
 <link rel="icon" href="favicon.ico?v=2" sizes="48x48 32x32 16x16">
 <link rel="icon" type="image/png" href="assets/favicon.png?v=2" sizes="256x256">
@@ -397,13 +401,14 @@ def home():
     filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
     tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
     svc_opts = "".join(f"<option>{s[2]}</option>" for s in SERVICES)
-    # Was "... | Liquor Store in Old Town Camarillo, CA": generic, and it repeated
-    # "Liquor" right after "JR Liquor Mart". Camarillo + CA stay (local SEO); the freed
-    # characters now carry higher-intent terms people actually search for.
+    # Wyatt's call 2026-07-26: just brand + city. Was "... | Liquor Store in Old Town
+    # Camarillo, CA", which was generic and repeated "Liquor" right after "JR Liquor Mart".
+    # Category keywords (bourbon / Beer Cave / wine) still live in the meta description,
+    # the h1 and the body copy, so local SEO keeps Camarillo + CA without the boilerplate.
     return head(f"{BIZ} | Bourbon, Beer Cave & Wine in Camarillo, CA",
                 # keep under ~155 chars or Google truncates it mid-sentence in results
                 f"{TAG}. Bourbon wall, walk-in Beer Cave, wine, tequila and snacks. Same-day delivery. Call {PHONE}.",
-                "home","") + nav("#top") + f'''
+                "home","", social_title=f"{BIZ} | {CITY}") + nav("#top") + f'''
 <main id="main">
 <section class="hero" id="top"><div class="wrap hero-in">
   <div class="hero-copy reveal">
