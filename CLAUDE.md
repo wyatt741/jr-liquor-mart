@@ -46,6 +46,21 @@ quotes; bracketed letters mark corrected typos only.
 - Chatbot: hybrid AI worker tier. Sister shop JR Smoke Zone cross-mentioned.
 - Hours shown: daily 8am-10pm (Apple Maps; only Sunday was Google-verified). Confirm with owner.
 
+## Showing the store's real Instagram photos
+Instagram cannot be scraped from a server: every content endpoint returns a login-gated JS
+shell, the profile API returns empty, and a FAKE shortcode returns the same HTTP 200 and
+same ~601KB shell as a real one (tested 2026-07-27), so codes cannot even be validated
+server-side. Two legitimate routes:
+1. **Owner sends files** (or Instagram > Settings > Your activity > Download your
+   information, which returns every post at full resolution). Drop them in `assets/`,
+   point `GALLERY` / `_SVC_PHOTO` / hero / about at them, and captions can finally say
+   "our Beer Cave" instead of generic stock labels. Best quality, no third-party scripts.
+2. **Official embeds (built, currently dormant)**: paste post URLs into `IG_POSTS` in
+   `build.py` (Instagram app > Share > Copy Link). Empty list = the section does not
+   render and IG's script never loads; app.js lazy-loads `embed.js` only when the section
+   nears the viewport. Never guess shortcodes: a wrong one renders "Sorry, this page
+   isn't available" to visitors and cannot be caught at build time.
+
 ## Launch blockers (owner/Wyatt input needed)
 0. **Enable GitHub Pages** (Settings > Pages > Deploy from a branch > `master` / root).
    Until this is clicked the site 404s at https://wyatt741.github.io/jr-liquor-mart/.

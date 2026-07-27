@@ -20,8 +20,8 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date
 
-CSSV = "styles.css?v=7"   # bump on ANY css change
-JSV  = "app.js?v=2"       # bump on ANY app.js change
+CSSV = "styles.css?v=8"   # bump on ANY css change
+JSV  = "app.js?v=3"       # bump on ANY app.js change
 CHATV= "chat.js?v=2"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
@@ -155,6 +155,32 @@ GCATS = [("all","Everything"),("shelf","The Shelves"),("cave","Served Cold"),("s
 # (The template's BRANDS marquee was cut in the 2026-07-27 repetition audit: its category
 # chips re-listed the card titles. Restore from site-template if a real stocked-brands
 # list ever arrives from the owner.)
+
+# ---- INSTAGRAM: official embeds, the sanctioned way to show the store's own posts.
+# HOW TO FILL: open the post in the Instagram app -> Share -> Copy Link -> paste the URL
+# here. Empty list = the whole section does not render (no dead cards, no extra script).
+#
+# Do NOT guess shortcodes. Instagram returns HTTP 200 and an identical login-gated shell
+# for a fake code as for a real one (verified 2026-07-27), so a bad code cannot be caught
+# from a server; it just renders "Sorry, this page isn't available" to visitors.
+IG_POSTS = [
+ # "https://www.instagram.com/p/XXXXXXXXXXX/",
+ # "https://www.instagram.com/reel/XXXXXXXXXXX/",
+]
+
+def ig_section():
+    if not IG_POSTS: return ""
+    cards = "".join(
+        f'<blockquote class="instagram-media" data-instgrm-permalink="{u}" data-instgrm-version="14">'
+        f'<a href="{u}" target="_blank" rel="noopener">View this post on Instagram</a></blockquote>'
+        for u in IG_POSTS)
+    return f'''
+<section class="section" id="instagram"><div class="wrap">
+  <div class="sec-head center reveal"><h2>Straight from the shop</h2>
+    <p>What's cold and what just landed, posted by us.</p></div>
+  <div class="ig-grid reveal" id="ig-grid">{cards}</div>
+  <div class="center"><a class="btn btn-dark btn-lg" href="{INSTAGRAM}" target="_blank" rel="noopener">Follow @jrliquormart<span class="btn-ic">&rarr;</span></a></div>
+</div></section>'''
 
 # (ORDER data lives in the SEO block up top so the JSON-LD OrderAction references it.)
 _ORDER_SLUG = {"doordash":"doordash","grubhub":"grubhub","uber eats":"ubereats","ubereats":"ubereats","postmates":"postmates"}
@@ -348,6 +374,7 @@ def home():
   <div class="gfilters reveal">{filt}</div>
   <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
 </div></section>
+{ig_section()}
 
 <section class="section" id="about"><div class="wrap about-in">
   <div class="about-copy reveal">
