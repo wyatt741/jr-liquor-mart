@@ -108,8 +108,9 @@ slot (position 1 or 8), which is why `frey-ranch-rye.jpg` is tile 1.
    A real **logo** still does not exist anywhere public: the chalkboard in
    `sign-welcome.jpg` is real branding but hand-lettered chalk, not artwork. Ask the owner
    for a logo file or a photo of the storefront sign; the monogram stays a placeholder.
-5. **Verify hours + Google review count with the owner** before wider promotion; consider
-   asking the owner about their Google listing.
+5. **Verify hours + Google review count with the owner** before wider promotion; there is
+   also a Google-listing item to raise with the owner (see the untracked local research
+   brief, `docs/RESEARCH_BRIEF.md`).
 
 ## QA gate (must pass before any push, PLAYBOOK §11)
 Playwright: every page at 1440x900 + 430x932, dark AND light, assert
@@ -121,6 +122,39 @@ clears the fixed callbar at full scroll.
 Note for remote sessions: the sandboxed browser cannot reach fonts.googleapis.com; route
 font requests to locally curl-downloaded copies (see PROJECT_STATE).
 
+## ⚠️ THIS IS A PUBLIC REPO
+`wyatt741/jr-liquor-mart` is **public** (it has to be — GitHub Pages serves the live site
+from it on a free plan). Therefore **`docs/` is gitignored and stays Mac-only**, same
+convention as `jr-smoke-zone`: the research brief and session-state docs hold internal
+consulting notes about a real client (competitor scan, negative-review analysis explicitly
+marked "not for the site", Google-listing findings) and must never be pushed here.
+**Never put client-confidential notes in any tracked file**, including this one. The
+cross-machine handoff lives in the ⭐ block below, which is written to be safe if read by
+anyone. (History was rewritten on 2026-07-26 to purge `docs/` and one such note; see the
+local state doc.)
+
+## ⭐ LATEST SESSION — 2026-07-26
+Local detail (untracked): `docs/SESSION_STATE_2026-07-26.md`.
+
+Pulled the shop's own Instagram via the Apify actor `data-slayer/instagram-posts` and put
+**four real owner photos** into `GALLERY`, replacing stock (owner approved; provenance in
+`LICENSES.md`). Only 4 of 12 posts were usable: the rest are Reels with captions burned
+into the video whose API thumbnails are only 360x640. Direct Instagram scraping is
+impossible for any non-browser client and is NOT an IP problem (control-tested).
+Commits `16b2982`, `367e13c`; both live and verified.
+
+**Gotchas:** gallery tiles are `4/3 object-fit:cover` and silently centre-crop — that
+sliced the `@` handle off the sign photo until it was pre-cropped to exactly 4:3. The
+browser pane screenshots this page all-black (it is ~8000px tall); measure the DOM and
+simulate the crop in PIL instead.
+
+**NEXT (Wyatt's feedback, not yet done):** (1) replace the Beer Cave photo at
+`build.py:135` — stock or AI both approved; (2) add the delivery apps to Contact
+(`ORDER` at `build.py:60`), noting a prior session deliberately cut duplicate order
+clusters; (3) add scrollspy to the header — **the `.nav-links a.active` CSS already exists
+at `styles.css:70`, only the `app.js` observer is missing.**
+
 ## Resume
-Read `docs/PROJECT_STATE.md`, then this file. Template conventions: `../PLAYBOOK.md`
-(while in the site-template repo) or the site-template repo's PLAYBOOK.
+Say `resume jr-liquor-mart`. Read the ⭐ block above, then (on this Mac only)
+`docs/SESSION_STATE_2026-07-26.md` and `docs/PROJECT_STATE.md`, which are untracked.
+Template conventions: the site-template repo's PLAYBOOK.
