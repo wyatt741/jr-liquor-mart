@@ -214,7 +214,27 @@ simulate the crop in PIL instead.
   Not bugs: `sms:` links, the chat widget's `autocomplete="off"`, and `WORKER_URL` failing
   to resolve (by design — the canned answers take over until the domain and worker exist).
 
-**Asset versions:** `styles.css?v=9` · `app.js?v=4` · `chat.js?v=4`. Bump on ANY change to
+- **Callbar removed, mobile nav + contact reworked** (`9bb0661`, `20795c2`, `e05e163`,
+  `03a4d57`). All live; Lighthouse still 100 x4, console clean.
+  - The sticky call/text bar is **gone**, along with the `body` bottom padding it owned
+    (leaving it = 64px of dead space) and its chat-bubble lift. `.cw` keeps
+    `env(safe-area-inset-bottom)` so it still clears the home indicator.
+  - **`.nav-contact`**: phones-only "Contact" link beside the hamburger, scrolling to
+    `#contact`. Without it a phone visitor has NO visible way to reach us — `.nav-cta` is
+    `display:none` below 900px and the hero CTAs are gone. `.brand-name` hides below 380px
+    to make room (measured: 320px had only ~33px spare). ⚠️ Calling from a phone is now
+    two taps by design.
+  - **ALL texting removed** (Wyatt): no `sms:` link, no "call or text" phrasing anywhere
+    including `chat.js` and `worker/worker.js`. `chat.js` still *routes* the word "text"
+    to an answer on purpose; the answer just offers calling.
+  - Delivery pills now sit **inside the contact panel**, not as a buried aside card.
+  - Visit address stacks to 4 lines on phones via `.addr-l` spans + an `.addr-sep` comma
+    hidden on mobile. `ADDR_LINES` is guarded by a build-time `assert` against `ADDR`.
+  - **Gallery must stay an EVEN number of tiles** (currently 8). Mobile is 2-up so an odd
+    count orphans the last tile; desktop is 3 cols with tile 1 spanning 2 rows, so 8 fills
+    exactly 3 rows. There is a comment above `GALLERY` saying so.
+
+**Asset versions:** `styles.css?v=12` · `app.js?v=4` · `chat.js?v=4`. Bump on ANY change to
 that file; a copy-only `build.py` edit needs no bump.
 
 **NEXT:** decide on the history rewrite (the only open technical item), then the
