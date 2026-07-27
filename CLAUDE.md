@@ -24,7 +24,7 @@ quotes; bracketed letters mark corrected typos only.
 | `styles.css` | Theme v2 rethemed: "black and tan" dark default, amber/bourbon accents (`--pink` slots hold amber `#e2a33d`/`#9a6410`), Fraunces display + Plus Jakarta Sans. `?v=1`. |
 | `app.js`, `chat.js` | Template JS. `chat.js` is in HYBRID AI mode: `WORKER_URL = https://chat.jrliquormart.com`, canned answers as automatic fallback (bot works before the worker deploys). `?v=1`. |
 | `worker/` | Cloudflare Worker for the AI chat (filled for JR). Not yet deployed. |
-| `assets/` | Licensed Pexels stock photos (credits in `LICENSES.md`) + monogram favicons + `og-image.jpg` + `logo.png`. Stock shots are CATEGORY imagery with generic captions, never presented as JR's own store. |
+| `assets/` | MIXED, credits in `LICENSES.md`: 4 real owner photos from the shop's Instagram (`sign-welcome`, `frey-ranch-rye`, `amigos-display`, `cooler-case`) + licensed Pexels/Unsplash stock + monogram favicons + `og-image.jpg` + `logo.png`. Owner photos ARE the store and may be captioned "our"; stock is CATEGORY imagery with generic captions, never presented as JR's own store. |
 | `docs/RESEARCH_BRIEF.md` | The sourced research brief the whole site is built from. |
 | `docs/PROJECT_STATE.md` | Status + open items. Read this to resume. |
 | `CNAME.hold` | `jrliquormart.com`, parked. Rename to `CNAME` once the domain is registered and DNS points at GitHub Pages (until then a live CNAME would redirect the github.io preview to a dead domain). |
@@ -47,23 +47,49 @@ quotes; bracketed letters mark corrected typos only.
 - Hours shown: daily 8am-10pm (Apple Maps; only Sunday was Google-verified). Confirm with owner.
 
 ## Showing the store's real Instagram photos
-Instagram cannot be scraped from a server: every content endpoint returns a login-gated JS
-shell, the profile API returns empty, and a FAKE shortcode returns the same HTTP 200 and
-same ~601KB shell as a real one (tested 2026-07-27), so codes cannot even be validated
-server-side. Two legitimate routes:
+**SOLVED 2026-07-26: use Apify.** Actor `data-slayer/instagram-posts`, input
+`{"username":"jrliquormart","maxPages":3}`, ~$0.002/run. This is the same method that
+sourced the jr-smoke-zone photos. Four photos are now live in `GALLERY` (see `LICENSES.md`
+for provenance and the owner sign-off). To re-pull later, run the actor and download the
+image URLs; **never hotlink** fbcdn URLs, they are signed and expire.
+
+Hard-won details, so the next session does not redo this:
+- **Direct scraping is genuinely impossible** and it is NOT an IP or datacenter problem.
+  Every content endpoint returns a ~601KB login-gated JS shell, and a *known-real* post
+  URL returns the identical shell (control-tested from Wyatt's own residential IP,
+  2026-07-26). A fake shortcode is indistinguishable from a real one server-side, so
+  codes can never be validated at build time.
+- **Reels are the trap.** The actor's image field for a Reel is the grid thumbnail at only
+  **360x640** (useless on a site). The real frame must be pulled from `video_url` with
+  ffmpeg, which tops out at 720x1280. True photos come back at 1080px.
+- Most of the account's Reels have their captions **burned into the video**, so frames from
+  them are unusable no matter the resolution. Sampling frames at 15/50/85% of the clip does
+  not help; the text sits there the whole way through.
+- The actor emits ~586 fields per item. Request only what you need, and expect the MCP
+  result to overflow to a file on disk (that is normal and convenient: parse it with Python
+  rather than pulling it through context).
+- Only use posts **authored by** @jrliquormart; discard posts by others that merely tag the
+  shop. **No employee faces** (Wyatt, 2026-07-26).
+
+Still valid alternatives:
 1. **Owner sends files** (or Instagram > Settings > Your activity > Download your
-   information, which returns every post at full resolution). Drop them in `assets/`,
-   point `GALLERY` / `_SVC_PHOTO` / hero / about at them, and captions can finally say
-   "our Beer Cave" instead of generic stock labels. Best quality, no third-party scripts.
+   information, which returns every post at full resolution). Best quality by far, and the
+   only route to the shots the account simply does not have.
 2. **Official embeds (built, currently dormant)**: paste post URLs into `IG_POSTS` in
    `build.py` (Instagram app > Share > Copy Link). Empty list = the section does not
    render and IG's script never loads; app.js lazy-loads `embed.js` only when the section
    nears the viewport. Never guess shortcodes: a wrong one renders "Sorry, this page
    isn't available" to visitors and cannot be caught at build time.
 
+## Gallery tile aspect ratios (bit us once)
+Tiles are `4/3 object-fit:cover`, except `.gal-masonry .tile:nth-child(7n+1)` which is
+`4/5` portrait. A source image whose ratio differs gets **centre-cropped**, which silently
+cuts content off the edges: `sign-welcome.jpg` at 1080x940 had the `@JRLiquorMart` line
+sliced in half. Either pre-crop the file to exactly 4:3, or put a tall image in a `7n+1`
+slot (position 1 or 8), which is why `frey-ranch-rye.jpg` is tile 1.
+
 ## Launch blockers (owner/Wyatt input needed)
-0. **Enable GitHub Pages** (Settings > Pages > Deploy from a branch > `master` / root).
-   Until this is clicked the site 404s at https://wyatt741.github.io/jr-liquor-mart/.
+0. ~~Enable GitHub Pages~~ DONE. Live and serving 200 (re-verified 2026-07-26).
 1. **Contact inbox**: `EMAIL` in `build.py` + `LEAD_URL` in `chat.js` are pending
    (`EMAIL_READY = False` hides email on the pages; the form will not deliver until the real
    lowercase inbox is set and FormSubmit's activation link is clicked).
@@ -72,10 +98,16 @@ server-side. Two legitimate routes:
 3. **Worker deploy** (chat AI): `cd worker && wrangler login && wrangler secret put
    ANTHROPIC_API_KEY && wrangler deploy`; once DNS is on Cloudflare, uncomment the
    `chat.jrliquormart.com` route block in `wrangler.jsonc` (PLAYBOOK §6). Set a spend cap.
-4. **Owner photos**: licensed stock (see `LICENSES.md`) now fills every slot, og-image and
-   logo.png exist. Still get real shots of the storefront, Beer Cave and bourbon wall; swap
-   files in `GALLERY`/`_SVC_PHOTO`/hero/about and update captions to say "our" shelves
-   (never caption stock as the real store). A real logo should replace the monogram.
+4. **Owner photos**: PARTLY DONE. Four real photos from the shop's Instagram are in the
+   gallery (2026-07-26, owner-approved). The account has **nothing** for the three slots
+   that matter most, so these still have to come from the owner directly:
+   **storefront exterior, the Beer Cave, and the bourbon wall** — currently licensed stock
+   (which is better composed than anything the account had, so do not downgrade for the
+   sake of "real"). Hero and `_SVC_PHOTO` are still stock. When real shots arrive, swap the
+   files and let captions say "our" (never caption stock as the real store).
+   A real **logo** still does not exist anywhere public: the chalkboard in
+   `sign-welcome.jpg` is real branding but hand-lettered chalk, not artwork. Ask the owner
+   for a logo file or a photo of the storefront sign; the monogram stays a placeholder.
 5. **Verify hours + Google review count with the owner** before wider promotion; consider
    asking the owner about their Google listing.
 
