@@ -115,10 +115,12 @@ slot (position 1 or 8), which is why `frey-ranch-rye.jpg` is tile 1.
 ## QA gate (must pass before any push, PLAYBOOK §11)
 Playwright: every page at 1440x900 + 430x932, dark AND light, assert
 `document.documentElement.scrollWidth <= viewport`, exercise theme toggle, hamburger,
-gallery filters/lightbox, chat, callbar. Passed clean on 2026-07-26 (20/20 combos).
-Mobile extras (also passed 2026-07-26): overflow at 320/360/390 too, 44px tap targets,
-16px inputs (no iOS focus zoom), safe-area insets on the callbar/chat lift, footer
-clears the fixed callbar at full scroll.
+gallery filters/lightbox, chat, and the phones-only `.nav-contact` link (it must land
+`#contact` at top:92, matching `section{scroll-margin-top:92px}`).
+Mobile extras: overflow at 320/360/390 too, 44px tap targets, 16px inputs (no iOS focus
+zoom), and the chat bubble keeping `env(safe-area-inset-bottom)` so it clears the home
+indicator. NOTE: the sticky call/text bar was REMOVED 2026-07-26 -- it used to own the
+body's bottom padding and the chat-bubble lift, so ignore older notes about it.
 Note for remote sessions: the sandboxed browser cannot reach fonts.googleapis.com; route
 font requests to locally curl-downloaded copies (see PROJECT_STATE).
 
@@ -178,7 +180,8 @@ simulate the crop in PIL instead.
   is not; the 16px rule is in a mobile media query and no input is under 16px on a phone.
 
 - **Copy sweep + hero CTAs removed** (`601a85a`). "Call the store" and "See what we carry"
-  are gone from the hero (the call action lives in the nav CTA and the mobile callbar; the
+  are gone from the hero (on desktop the call action is the nav CTA; on phones it is the
+  `.nav-contact` link beside the hamburger, added 2026-07-26 after the sticky bar came out; the
   order pills are now the hero's only action). "Free parking" was in **three** places and
   was cut from the hero and the Delivery card — but **deliberately kept in the chatbot**,
   where the "parking" keyword routes to that answer, so it responds to a question rather
