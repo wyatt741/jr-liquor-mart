@@ -190,7 +190,28 @@ simulate the crop in PIL instead.
   (`chat.js?v=3`), and the `build.py` docstring still listed the deleted marquee/Why
   sections.
 
-**Asset versions:** `styles.css?v=9` · `app.js?v=4` · `chat.js?v=3`. Bump on ANY change to
+- **Bug hunt** (`2e5b002`, `eabbc01`, `c8dec37`). Console is now clean; Lighthouse still
+  100/100/100/100. Audited and PASSING: every anchor/link, the 4 redirect stubs, gallery
+  filter, lightbox, theme toggle + persistence, mobile menu, and the chat sending and
+  receiving. Three real defects fixed:
+  1. ❗**The contact form silently discarded messages.** It rendered unconditionally with
+     `action="formsubmit.co/inbox@example.com"` — `EMAIL_READY` only ever hid the footer
+     mailto, never the form. FormSubmit will not deliver to an unconfirmed address and
+     `example.com` is IANA-reserved, so a real customer's message just vanished. The form
+     is now behind `contact_form()` and gated on `EMAIL_READY`, showing a call/text panel
+     instead. **Set a real lowercase `EMAIL`, click FormSubmit's activation, flip
+     `EMAIL_READY = True`, and the form returns** (with the `autocomplete` attributes it
+     was missing). Judgement call: a live form that eats messages is worse than no form.
+  2. The chat said "In the live site this sends straight to us" *on* the live site.
+     Reworded. `chat.js?v=4`. That phrase still appears **as a code comment** — a grep
+     hit there is expected, not a regression.
+  3. **`<title>` and `og:title` are now DIFFERENT on purpose** — `head(..., social_title=)`.
+     `<title>` carries keywords for search (`Bourbon, Beer Cave & Wine in Camarillo, CA`);
+     the share card shows the clean `JR Liquor Mart | Camarillo, CA`. Don't "unify" them.
+  Not bugs: `sms:` links, the chat widget's `autocomplete="off"`, and `WORKER_URL` failing
+  to resolve (by design — the canned answers take over until the domain and worker exist).
+
+**Asset versions:** `styles.css?v=9` · `app.js?v=4` · `chat.js?v=4`. Bump on ANY change to
 that file; a copy-only `build.py` edit needs no bump.
 
 **NEXT:** decide on the history rewrite (the only open technical item), then the
