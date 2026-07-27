@@ -148,11 +148,23 @@ sliced the `@` handle off the sign photo until it was pre-cropped to exactly 4:3
 browser pane screenshots this page all-black (it is ~8000px tall); measure the DOM and
 simulate the crop in PIL instead.
 
-**NEXT (Wyatt's feedback, not yet done):** (1) replace the Beer Cave photo at
-`build.py:135` — stock or AI both approved; (2) add the delivery apps to Contact
-(`ORDER` at `build.py:60`), noting a prior session deliberately cut duplicate order
-clusters; (3) add scrollspy to the header — **the `.nav-links a.active` CSS already exists
-at `styles.css:70`, only the `app.js` observer is missing.**
+**Later the same evening (commits `7088feb`, `9631bce`), all shipped and live:**
+- **Repo made safe:** `docs/` is gitignored/untracked (this is a public repo) and a client
+  note was scrubbed from this file. ❗**Unfinished: the git history still contains both** —
+  31 blobs, plus old `docs/` blobs reachable by SHA. A `git filter-repo` rewrite + force
+  push of `master` and `main` is pending **Wyatt's** decision (the classifier blocks the
+  agent from running it). Making the repo private was rejected: on GitHub Free that
+  unpublishes Pages and takes the live site down.
+- **Beer Cave photo replaced** — `beer-cooler.jpg` (washed-out Budweiser in a domestic
+  fridge) → **`beer-cave.jpg`, AI-generated**, pre-cropped to exactly 4:3. See `LICENSES.md`.
+- **Delivery links added to Contact** as plain text links in a `cside-card`, deliberately
+  not a second pill cluster (the merge audit cut duplicates for repetition).
+- **Nav scrollspy shipped** (`app.js?v=4`). ⚠️ It failed its first test because the browser
+  pane runs `visibilityState:"hidden"`, where **rAF and scroll events are suspended**. It
+  now calls its handler straight from the scroll listener; to test it in the pane you must
+  `dispatchEvent(new Event('scroll'))` by hand.
+
+**NEXT:** decide on the history rewrite, then the owner-dependent launch blockers below.
 
 ## Resume
 Say `resume jr-liquor-mart`. Read the ⭐ block above, then (on this Mac only)
