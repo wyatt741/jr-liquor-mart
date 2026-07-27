@@ -49,6 +49,40 @@ if (igGrid) {
   igIO.observe(igGrid);
 }
 
+// Nav scrollspy (one-page layout): highlight the section currently under the header.
+// build.py renders #top active server-side; this keeps it in step as you scroll.
+// No CSS needed, .nav-links a.active is already styled.
+const spy = [...document.querySelectorAll('.nav-links a[href^="#"]')]
+  .map(a => ({ a, sec: document.querySelector(a.getAttribute('href')) }))
+  .filter(x => x.sec);
+if (spy.length > 1) {
+  const NAV_H = 100;              // sections use scroll-margin-top:92px
+  let current = null;
+  const sync = () => {
+    const y = scrollY + NAV_H + 1;
+    // last section whose top has passed under the header; sections vary a lot in
+    // height, so this is steadier than raw intersection ratios
+    let active = spy[0];
+    for (const x of spy) if (x.sec.getBoundingClientRect().top + scrollY <= y) active = x;
+    // the final section is often shorter than the viewport and can never reach the
+    // header, so it would otherwise never light up
+    if (innerHeight + scrollY >= document.body.scrollHeight - 2) active = spy[spy.length - 1];
+    if (active === current) return;
+    current = active;
+    spy.forEach(x => {
+      x.a.classList.toggle('active', x === active);
+      if (x === active) x.a.setAttribute('aria-current', 'true');
+      else x.a.removeAttribute('aria-current');
+    });
+  };
+  // Called straight from the scroll event, no rAF wrapper: the browser already fires
+  // scroll at most once a frame, and rAF is suspended in a hidden tab (which also made
+  // this impossible to test).
+  addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', sync);
+  sync();
+}
+
 // Gallery filter
 const filters = document.querySelectorAll('.gfilter');
 if (filters.length) {
