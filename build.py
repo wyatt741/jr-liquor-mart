@@ -20,7 +20,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=8"   # bump on ANY css change
+CSSV = "styles.css?v=9"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
 CHATV= "chat.js?v=2"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -270,7 +270,8 @@ def brandmark(cls=""):
     # Placeholder logo = gradient initials square + wordmark. Swap the <span class="brand-b"> for
     # <img src="assets/logo.png"> once a real logo exists.
     return (f'<a class="brand {cls}" href="index.html" aria-label="{BIZ} home">'
-            f'<span class="brand-b">{INITIAL}</span><span class="brand-name">{BIZ}</span></a>')
+            f'<span class="brand-b" aria-hidden="true">{INITIAL}</span>'
+            f'<span class="brand-name">{BIZ}</span></a>')
 
 def nav(active):
     links = "".join(
@@ -326,8 +327,8 @@ def footer():
     <p>{TAG}.</p>
     <div class="foot-social">{_social()}</div>
   </div>
-  <div class="foot-col"><h5>Explore</h5>{cols}</div>
-  <div class="foot-col"><h5>Visit</h5>
+  <div class="foot-col"><h4>Explore</h4>{cols}</div>
+  <div class="foot-col"><h4>Visit</h4>
     <a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a>
     <a href="tel:{PHONE_TEL}">{PHONE}</a>
     {email_line}
@@ -361,7 +362,8 @@ def home():
     tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
     svc_opts = "".join(f"<option>{s[2]}</option>" for s in SERVICES)
     return head(f"{BIZ} | Liquor Store in Old Town Camarillo, CA",
-                f"{TAG}. The bourbon wall, the walk-in Beer Cave, wine, tequila and snacks, with same-day delivery. Call {PHONE}.",
+                # keep under ~155 chars or Google truncates it mid-sentence in results
+                f"{TAG}. Bourbon wall, walk-in Beer Cave, wine, tequila and snacks. Same-day delivery. Call {PHONE}.",
                 "home","") + nav("#top") + f'''
 <main id="main">
 <section class="hero" id="top"><div class="wrap hero-in">
