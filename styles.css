@@ -590,7 +590,7 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .prod-card:hover .prod-img img{transform:scale(1.05)}
 .prod-body{display:flex;flex-direction:column;flex:1;padding:28px 28px 30px}
 .prod-body .ic-badge{margin-bottom:16px}
-.prod-body h2{font-size:clamp(1.5rem,2.6vw,2rem);margin-bottom:10px}
+.prod-body h2,.prod-body h3{font-size:clamp(1.5rem,2.6vw,2rem);margin-bottom:10px}
 .prod-body>p{color:var(--muted);font-size:1.02rem;margin-bottom:18px}
 .prod-body .ticks{margin-bottom:20px}
 .prod-body .btn{margin-top:auto;align-self:flex-start}

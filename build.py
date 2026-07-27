@@ -47,10 +47,21 @@ FACEBOOK = ""
 TIKTOK   = ""
 
 # ---- SEO: canonical base + share image + LocalBusiness structured data ----
-# TODO per-site: add a 1200x630 assets/og-image.jpg + assets/logo.png (none exist yet).
 # NOTE: no aggregateRating on purpose — never add one without owner-verified live counts.
-BASE   = f"https://{DOMAIN}"
+# BASE is the canonical origin for canonicals/OG/sitemap/JSON-LD. It points at the LIVE
+# GitHub Pages origin for now; a dead-domain canonical suppresses indexing of the live
+# site. TODO: the day jrliquormart.com is live on Pages, set BASE = f"https://{DOMAIN}"
+# and re-run build.
+BASE   = "https://wyatt741.github.io/jr-liquor-mart"
 OG_IMG = f"{BASE}/assets/og-image.jpg"
+
+# Verified delivery storefronts (2026-07-26): "JR Food Mart" on Uber Eats/Postmates
+# (same storefront), "Jr Liquor & Convenience" on Grubhub. No DoorDash found.
+ORDER = [   # order matters: red top-left, green top-right on phones (Wyatt's call)
+ ("Grubhub",   "https://www.grubhub.com/restaurant/jr-liquor--convenience-2616-ventura-blvd-camarillo/2353021"),
+ ("Uber Eats", "https://www.ubereats.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
+ ("Postmates", "https://postmates.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
+]
 _ap = [x.strip() for x in ADDR.split(",")]
 _rp = (_ap[2] if len(_ap) > 2 else "").split()
 LD_JSON = json.dumps({
@@ -62,9 +73,12 @@ LD_JSON = json.dumps({
              "addressLocality":_ap[1] if len(_ap) > 1 else "","addressRegion":_rp[0] if _rp else "",
              "postalCode":_rp[1] if len(_rp) > 1 else "","addressCountry":"US"},
   "hasMap":MAPS,
+  "geo":{"@type":"GeoCoordinates","latitude":34.2154821,"longitude":-119.0353775},
   "openingHoursSpecification":[{"@type":"OpeningHoursSpecification",
     "dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
     "opens":"08:00","closes":"22:00"}],
+  "paymentAccepted":"Credit card, Apple Pay, contactless",
+  "potentialAction":{"@type":"OrderAction","target":[u for _,u in ORDER]},
   "sameAs":[s for s in (INSTAGRAM,FACEBOOK,TIKTOK) if s],
 }, separators=(",",":"))
 
@@ -98,27 +112,22 @@ ICON = {
 def icon(name): return ICON.get(name, "")
 
 # ============================ CONTENT DATA ============================
-# What we carry: (id, icon, title, short-blurb-for-home-cards, long-copy-for-carry-page, [bullets])
-# Copy is grounded in public reviews and the owner's Yelp blurb (see docs/RESEARCH_BRIEF.md).
+# What we carry: (id, icon, title, copy). ONE tight paragraph per card, no bullet lists
+# (bullets restated the paragraphs; cut in the 2026-07-27 repetition audit). Each fact
+# lives in exactly one place on the page. Grounded in docs/RESEARCH_BRIEF.md.
 SERVICES = [
- ("bourbon-whiskey","bottle","Bourbon & Whiskey","A wall of bourbon and whiskey, everyday pours to top-shelf finds.",
-  "The bourbon wall is the corner of the store customers talk about most. Everyday labels sit next to top-shelf sippers, and the shelf changes, so if you're hunting a specific bottle, call ahead and we'll check it for you.",
-  ["The bourbon wall","Top-shelf selections","Everyday go-tos","Call ahead to check a bottle"]),
- ("beer-cave","beer","The Beer Cave","A walk-in cooler stacked cold, with a serious IPA section.",
-  "The walk-in cooler is the store's calling card. Everything inside is cold, the shelves stay stocked, and the IPA section runs deep. Walk in, grab what's cold, go.",
-  ["Walk-in beer cave","A deep IPA section","Always cold","Always stocked"]),
- ("tequila-agave","shot","Tequila & Agave","Margarita staples to sipping bottles on the agave shelf.",
-  "From margarita-night staples to bottles you sip slow, the agave shelf covers the range. Not sure what to grab? Ask at the counter and we'll point you right.",
-  ["The agave shelf","Margarita staples","Sipping bottles","Ask at the counter"]),
- ("wine","wine","Wine","Reds, whites and bubbly for the table tonight.",
-  "Wine and spirits at your disposal, in the store's own words. Grab a bottle for dinner, something to bring to the party, or ask the counter for a pick.",
-  ["Reds and whites","Bubbly for celebrating","Bottles for tonight","Ask for a pick"]),
- ("snacks-extras","bag","Snacks & Extras","Snacks, cold sodas and energy drinks by the register.",
-  "The quick-stop side of the store: snacks, cold sodas and energy drinks, right by the register. In and out in a minute, with free parking just outside the door.",
-  ["Snacks","Cold sodas and energy drinks","In and out in a minute","Free parking lot outside"]),
- ("delivery-pickup","truck","Delivery & Pickup","Same-day delivery through the apps, or curbside pickup out front.",
-  "Partnered with the delivery apps for same-day delivery, in the store's own words. Prefer to swing by? Curbside and in-store pickup are both easy, with Apple Pay and contactless at the register.",
-  ["Same-day delivery via the apps","Curbside and in-store pickup","Apple Pay and contactless","Free parking lot"]),
+ ("bourbon-whiskey","bottle","Bourbon & Whiskey",
+  "A whole wall of it: everyday labels next to top-shelf sippers, with new bottles rotating through."),
+ ("beer-cave","beer","The Beer Cave",
+  "Walk into the cooler and grab it cold. The IPA section runs deep."),
+ ("tequila-agave","shot","Tequila & Agave",
+  "Margarita-night staples to bottles you sip slow."),
+ ("wine","wine","Wine",
+  "Reds, whites and bubbly, for tonight's table or the party you're heading to."),
+ ("snacks-extras","bag","Snacks & Extras",
+  "Snacks, cold sodas and energy drinks, right by the register."),
+ ("delivery-pickup","truck","Delivery & Pickup",
+  "Order through the apps up top, or call it in and grab it curbside. Free lot out front, Apple Pay at the register."),
 ]
 # services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
 _SVC_PHOTO = {
@@ -130,13 +139,8 @@ _SVC_PHOTO = {
  "delivery-pickup": ("store","delivery-bag.jpg","A bottle packed in a paper carrier bag"),
 }
 
-# why-choose-us: (icon, title, body) — each grounded in a quoted public review
-FEATURES = [
- ("pin","Old Town local","On E Ventura Blvd in Old Town Camarillo, on the same corner since 1997."),
- ("snow","Always cold","The walk-in Beer Cave keeps every bottle and can cold, all day."),
- ("star","Stocked and organized","Remodeled, clean and stocked deep, from the bourbon wall to the cooler."),
- ("heart","A counter that knows you","Fast, friendly service that treats regulars like friends."),
-]
+# (The template's FEATURES "why choose us" tiles were cut in the 2026-07-27 repetition
+# audit: on a one-pager all four restated the hero, the cards, or the About section.)
 
 # gallery photos: (category, assets file, caption). LICENSED STOCK (Pexels, LICENSES.md).
 # Captions stay generic on purpose: these are category shots, NOT photos of JR's own store.
@@ -148,24 +152,11 @@ GALLERY = [
 ]
 GCATS = [("all","Everything"),("shelf","The Shelves"),("cave","Served Cold"),("store","Wine & Extras")]
 
-# marquee: category chips only (intake decision). No brand-name claims until the owner
-# confirms a stocked-brands list. ("txt", None, label) or ("img","file.png","Alt").
-BRANDS = [("txt",None,"The Bourbon Wall"),("txt",None,"Walk-in Beer Cave"),("txt",None,"IPA Section"),
-          ("txt",None,"Top Shelf Spirits"),("txt",None,"Wine"),("txt",None,"Snacks & Sodas")]
-def brand_chip(kind, f, n):
-    if kind == "img":
-        return f'<span class="brand-chip"><img src="assets/{f}" alt="{n}" loading="lazy"></span>'
-    return f'<span class="brand-chip brand-chip-txt">{n}</span>'
+# (The template's BRANDS marquee was cut in the 2026-07-27 repetition audit: its category
+# chips re-listed the card titles. Restore from site-template if a real stocked-brands
+# list ever arrives from the owner.)
 
-# ---- ORDER: VERIFIED live delivery storefronts (checked 2026-07-26). The store lists as
-# "JR Food Mart" on Uber Eats/Postmates (same storefront) and "Jr Liquor & Convenience"
-# on Grubhub, all at 2616 Ventura Blvd. NO DoorDash storefront was found in any search;
-# add it here only with a real link from the owner. ----
-ORDER = [   # order matters: red top-left, green top-right on phones (Wyatt's call)
- ("Grubhub",   "https://www.grubhub.com/restaurant/jr-liquor--convenience-2616-ventura-blvd-camarillo/2353021"),
- ("Uber Eats", "https://www.ubereats.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
- ("Postmates", "https://postmates.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
-]
+# (ORDER data lives in the SEO block up top so the JSON-LD OrderAction references it.)
 _ORDER_SLUG = {"doordash":"doordash","grubhub":"grubhub","uber eats":"ubereats","ubereats":"ubereats","postmates":"postmates"}
 def order_bar(cls=""):
     if not ORDER: return ""
@@ -196,12 +187,14 @@ def tile(cat, label, box=False):
     # CSS gradient placeholder — renders with NO image. Swap to photo() once assets exist.
     return (f'<figure class="tile tile-ph{" tile-box" if box else ""}" data-cat="{cat}">'
             f'<span class="tile-label">{label}</span><span class="tile-swap">photo</span></figure>')
-def photo(cat, file, label, lightbox=False):
+def photo(cat, file, label, lightbox=False, eager=False):
     # REAL image version. Drop {file} in assets/ and call this instead of tile().
+    # eager=True for the LCP hero image only (eager + fetchpriority=high).
     extra = f' data-full="assets/{file}"' if lightbox else ""
     role = ' role="button" tabindex="0"' if lightbox else ""
+    load = ' loading="eager" fetchpriority="high"' if eager else ' loading="lazy"'
     return (f'<figure class="tile" data-cat="{cat}"{extra}{role}>'
-            f'<img src="assets/{file}" alt="{label}" loading="lazy"><figcaption>{label}</figcaption></figure>')
+            f'<img src="assets/{file}" alt="{label}"{load}><figcaption>{label}</figcaption></figure>')
 
 # ============================ SHARED CHROME ============================
 def head(title, desc, page="", path="index.html"):
@@ -214,6 +207,8 @@ def head(title, desc, page="", path="index.html"):
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="website"><meta property="og:url" content="{canon}">
 <meta property="og:site_name" content="{BIZ}"><meta property="og:image" content="{OG_IMG}">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bottles glowing on an amber-lit shelf">
 <meta property="og:locale" content="en_US"><meta name="theme-color" content="#b8791a">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
@@ -296,7 +291,6 @@ def footer():
     <a href="tel:{PHONE_TEL}">{PHONE}</a>
     {email_line}
     <span class="foot-note">{HOURS}</span>
-    <span class="foot-note">Next door: JR Smoke Zone</span>
   </div>
 </div>
 <div class="legal wrap"><span>&copy; 2026 {BIZ}. All rights reserved.</span><span>21+ only. Please drink responsibly.</span></div>
@@ -311,23 +305,16 @@ def footer():
 
 # ============================ THE PAGE (one-page site) ============================
 def home():
-    brow = "".join(brand_chip(*b) for b in BRANDS); brands = brow + brow
-    feats = "".join(f'<div class="feat"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div>' for k,t,d in FEATURES)
     tst = "".join(
         f'<blockquote class="tst"><div class="tst-stars">{"★"*s}</div><p>&ldquo;{q}&rdquo;</p><cite>{n}<span>{r}</span></cite></blockquote>'
         for n,r,q,s in TESTIMONIALS)
     cards = ""
-    for sid,ic,title,short,long,bullets in SERVICES:
-        bl = "".join(f"<li>{b}</li>" for b in bullets)
+    for sid,ic,title,copy in SERVICES:
         pcat, pfile, palt = _SVC_PHOTO.get(sid, ("store","snack-wall.jpg",title))
-        # Cards are informational; the ONE order-button cluster lives in the hero, and the
-        # nav CTA + callbar always offer the call. No per-card buttons.
-        act = ""
         cards += f'''<article class="prod-card" id="{sid}">
         <div class="prod-img">{photo(pcat,pfile,palt)}</div>
-        <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2>
-        <p>{long}</p><ul class="ticks">{bl}</ul>
-        {act}</div>
+        <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h3>{title}</h3>
+        <p>{copy}</p></div>
       </article>'''
     filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
     tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
@@ -340,12 +327,12 @@ def home():
   <div class="hero-copy reveal">
     <span class="eyebrow">Old Town Local &middot; Est. 1997</span>
     <h1>The bourbon wall, the <span class="hl">Beer Cave</span>, and a counter that knows your name.</h1>
-    <p>Keeping Old Town Camarillo stocked and cold since 1997, with same-day delivery and curbside pickup.</p>
+    <p>Same-day delivery and curbside pickup, or park free out front and browse.</p>
     <div class="hero-btns"><a class="btn btn-primary btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
     <a class="btn btn-ghost btn-lg" href="#carry">See what we carry</a></div>
     {order_bar()}
   </div>
-  <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf")}</div></div>
+  <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf",eager=True)}</div></div>
 </div></section>
 
 <section class="section" id="carry"><div class="wrap">
@@ -362,40 +349,29 @@ def home():
   <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
 </div></section>
 
-<section class="brands"><div class="wrap brands-in">
-  <span class="brands-label">Inside the store</span>
-  <div class="brands-marquee"><div class="brands-track">{brands}</div></div>
-</div></section>
-
-<section class="section"><div class="wrap">
-  <div class="sec-head center reveal"><h2>Why Camarillo keeps coming back</h2></div>
-  <div class="feat-grid stagger reveal">{feats}</div>
-</div></section>
-
-<section class="section band" id="about"><div class="wrap about-in">
+<section class="section" id="about"><div class="wrap about-in">
   <div class="about-copy reveal">
     <h2>Old Town local since 1997</h2>
-    <p class="lead">JR Liquor Mart has held down the same corner of E Ventura Blvd since 1997.</p>
-    <p>The store got a full remodel a few years back, and customers noticed: clean, organized, stocked deep and always cold. The bourbon wall and the walk-in Beer Cave are the two corners people talk about most, and the counter treats regulars like friends.</p>
-    <p>Next door is JR Smoke Zone, our sister shop. Between the two, this corner of Old Town has you covered.</p>
+    <p class="lead">JR Liquor Mart has held down the same spot on E Ventura Blvd for almost thirty years.</p>
+    <p>Our sister shop, JR Smoke Zone, is right next door.</p>
     <div class="about-facts">
       <div><strong>1997</strong><span>On this corner since</span></div>
-      <div><strong>8am-10pm</strong><span>Open daily</span></div>
-      <div><strong>Old Town</strong><span>E Ventura Blvd, Camarillo</span></div>
+      <div><strong>2022</strong><span>The big remodel</span></div>
+      <div><strong>21+</strong><span>Valid ID, always</span></div>
     </div>
   </div>
   <div class="about-art reveal d1"><div class="art-frame">{photo("store","night-window.jpg","Bottles in a shop window at night")}</div></div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section band"><div class="wrap">
   <div class="sec-head center reveal"><span class="eyebrow">Real reviews</span><h2>What customers say</h2>
     <p class="sample-note">Quoted word for word from public Yelp and Google reviews.</p></div>
   <div class="tst-grid stagger reveal">{tst}</div>
 </div></section>
 
-<section class="section band" id="contact"><div class="wrap">
+<section class="section" id="contact"><div class="wrap">
   <div class="sec-head center reveal"><h2>Come by or call</h2>
-    <p>2616 E Ventura Blvd Unit 106, in Old Town Camarillo. {HOURS}.</p></div>
+    <p>Ask us to check a bottle, or just come say hi.</p></div>
   <div class="contact-in">
   <form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
     <input type="hidden" name="_subject" value="New message from jrliquormart.com">
@@ -412,7 +388,6 @@ def home():
   </form>
   <aside class="contact-side reveal d1">
     <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
-    <div class="cside-card"><h3>Delivery &amp; pickup</h3><p>Same-day delivery through the apps up top (we're listed as JR Food Mart), or park free in the lot and come in.</p></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
@@ -450,7 +425,7 @@ def build():
     for fn,(anchor,title) in STUBS.items():
         open(fn,"w",encoding="utf-8").write(stub(anchor,title))
     open("sitemap.xml","w",encoding="utf-8").write(sitemap())
-    open("robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: https://{DOMAIN}/sitemap.xml\n")
+    open("robots.txt","w",encoding="utf-8").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
     print("built: index.html + redirect stubs:", ", ".join(STUBS), "+ sitemap.xml, robots.txt")
 
 if __name__ == "__main__":
