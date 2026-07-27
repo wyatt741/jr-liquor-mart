@@ -535,13 +535,11 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .order-postmates{--oc:#191919}
 .order-pickup{--oc:var(--pink)}
 
-/* standalone order row under the hero (one-page layout): seamless, centered, no label,
-   the branded pills explain themselves */
-.order-sec{padding:0 0 34px}
-.order-sec .order-bar{margin-top:0;justify-content:center}
-.order-sec .order-lbl{display:none}
-.order-sec .order-btns{justify-content:center}
-@media(max-width:560px){.order-sec .order-bar{flex-direction:row;align-items:center;justify-content:center}}
+/* hero order pills: the site's ONE order-button cluster; centered under the CTAs on phones */
+@media(max-width:600px){
+  .hero .order-bar{flex-direction:column;align-items:center;gap:10px}
+  .hero .order-btns{justify-content:center}
+}
 
 /* Menu page: category headings + price rows with leader dots */
 .menu-cat{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}

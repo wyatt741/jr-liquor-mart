@@ -20,9 +20,9 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date
 
-CSSV = "styles.css?v=5"   # bump on ANY css change
+CSSV = "styles.css?v=7"   # bump on ANY css change
 JSV  = "app.js?v=2"       # bump on ANY app.js change
-CHATV= "chat.js?v=1"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
+CHATV= "chat.js?v=2"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
 INITIAL  = "JR"                                  # placeholder logo letters (until a real logo drops in)
@@ -161,10 +161,10 @@ def brand_chip(kind, f, n):
 # "JR Food Mart" on Uber Eats/Postmates (same storefront) and "Jr Liquor & Convenience"
 # on Grubhub, all at 2616 Ventura Blvd. NO DoorDash storefront was found in any search;
 # add it here only with a real link from the owner. ----
-ORDER = [
+ORDER = [   # order matters: red top-left, green top-right on phones (Wyatt's call)
+ ("Grubhub",   "https://www.grubhub.com/restaurant/jr-liquor--convenience-2616-ventura-blvd-camarillo/2353021"),
  ("Uber Eats", "https://www.ubereats.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
  ("Postmates", "https://postmates.com/store/jr-food-mart/49o0cIPyRlyIK4ThVzmOAQ"),
- ("Grubhub",   "https://www.grubhub.com/restaurant/jr-liquor--convenience-2616-ventura-blvd-camarillo/2353021"),
 ]
 _ORDER_SLUG = {"doordash":"doordash","grubhub":"grubhub","uber eats":"ubereats","ubereats":"ubereats","postmates":"postmates"}
 def order_bar(cls=""):
@@ -250,14 +250,9 @@ def nav(active):
 </div></header></div>
 <div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a></div>'''
 
-def cta():
-    return f'''<section class="cta-band"><div class="wrap"><div class="cta-card reveal">
-  <div class="cta-copy"><span class="eyebrow eyebrow-light">Looking for a bottle?</span>
-    <h2>Call ahead, we'll check the shelf.</h2>
-    <p>Or just come by. {HOURS}, with same-day delivery and curbside pickup through the delivery apps.</p></div>
-  <div class="cta-btns"><a class="btn btn-glow btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
-  <a class="btn btn-ghost-light btn-lg" href="{MAPS}" target="_blank" rel="noopener">Get directions</a></div>
-</div></div></section>'''
+# NOTE: the template's cta() closing band was cut in the one-page merge: the #contact
+# section (big phone card + form + map) is the page's closer, and a "call ahead" band
+# stacked right after it repeated the same message.
 
 def _social():
     out = []
@@ -325,8 +320,9 @@ def home():
     for sid,ic,title,short,long,bullets in SERVICES:
         bl = "".join(f"<li>{b}</li>" for b in bullets)
         pcat, pfile, palt = _SVC_PHOTO.get(sid, ("store","snack-wall.jpg",title))
-        act = order_bar() if sid == "delivery-pickup" else \
-              f'<a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>'
+        # Cards are informational; the ONE order-button cluster lives in the hero, and the
+        # nav CTA + callbar always offer the call. No per-card buttons.
+        act = ""
         cards += f'''<article class="prod-card" id="{sid}">
         <div class="prod-img">{photo(pcat,pfile,palt)}</div>
         <div class="prod-body"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2>
@@ -347,15 +343,9 @@ def home():
     <p>Keeping Old Town Camarillo stocked and cold since 1997, with same-day delivery and curbside pickup.</p>
     <div class="hero-btns"><a class="btn btn-primary btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
     <a class="btn btn-ghost btn-lg" href="#carry">See what we carry</a></div>
+    {order_bar()}
   </div>
   <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf")}</div></div>
-</div></section>
-
-<section class="order-sec"><div class="wrap">{order_bar("order-center")}</div></section>
-
-<section class="brands"><div class="wrap brands-in">
-  <span class="brands-label">Inside the store</span>
-  <div class="brands-marquee"><div class="brands-track">{brands}</div></div>
 </div></section>
 
 <section class="section" id="carry"><div class="wrap">
@@ -370,6 +360,11 @@ def home():
     <p>Licensed stock shots holding the spot until we shoot the real shelves.</p></div>
   <div class="gfilters reveal">{filt}</div>
   <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
+</div></section>
+
+<section class="brands"><div class="wrap brands-in">
+  <span class="brands-label">Inside the store</span>
+  <div class="brands-marquee"><div class="brands-track">{brands}</div></div>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -417,7 +412,7 @@ def home():
   </form>
   <aside class="contact-side reveal d1">
     <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
-    <div class="cside-card"><h3>Delivery &amp; pickup</h3><p>Same-day delivery through <a href="{ORDER[0][1]}" target="_blank" rel="noopener">Uber Eats</a>, <a href="{ORDER[1][1]}" target="_blank" rel="noopener">Postmates</a> or <a href="{ORDER[2][1]}" target="_blank" rel="noopener">Grubhub</a> (we're listed as JR Food Mart), or park free in the lot and come in.</p></div>
+    <div class="cside-card"><h3>Delivery &amp; pickup</h3><p>Same-day delivery through the apps up top (we're listed as JR Food Mart), or park free in the lot and come in.</p></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
@@ -427,7 +422,7 @@ def home():
 <section class="map-sec"><iframe src="{MAP_EMBED}" title="{BIZ} location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section>
 </main>
 <div class="lightbox" id="lightbox" aria-hidden="true"><button class="lb-close" aria-label="Close">&times;</button><img src="" alt=""></div>
-{cta()}{footer()}'''
+{footer()}'''
 
 # ============================ BUILD ============================
 PAGES = {"index.html": home}
