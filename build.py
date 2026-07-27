@@ -23,7 +23,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=10"   # bump on ANY css change
+CSSV = "styles.css?v=11"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
 CHATV= "chat.js?v=4"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -324,6 +324,7 @@ def nav(active):
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
   <a class="btn btn-primary btn-sm nav-cta cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
+  <a class="nav-contact" href="#contact">Contact</a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
 <div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a></div>'''
@@ -458,7 +459,7 @@ def home():
   <div class="contact-in">
   {contact_form(svc_opts)}
   <aside class="contact-side reveal d1">
-    <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
+    <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a><div class="cside-social"><a href="sms:{PHONE_TEL}">Send a text &rarr;</a></div></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
     <div class="cside-card"><h3>Order delivery</h3><div class="cside-social">{order_links()}</div></div>
