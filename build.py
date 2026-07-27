@@ -23,7 +23,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=11"   # bump on ANY css change
+CSSV = "styles.css?v=12"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
 CHATV= "chat.js?v=4"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -42,6 +42,11 @@ EMAIL    = "inbox@example.com"
 EMAIL_READY = False                              # flip True once the real inbox is set above
 HOURS    = "Open daily 8am-10pm"                 # Apple Maps listing; Sunday verified on Google
 DOMAIN   = "jrliquormart.com"
+# Visit card wraps to 4 lines on phones (Wyatt, 2026-07-26). The assert stops these
+# drifting from ADDR: change one without the other and the build fails.
+ADDR_LINES = ["2616 E Ventura Blvd", "Unit 106", "Camarillo, CA", "93010"]
+_squash = lambda x: x.replace(",", "").replace(" ", "").lower()
+assert _squash("".join(ADDR_LINES)) == _squash(ADDR), "ADDR_LINES drifted from ADDR"
 MAPS     = "https://maps.google.com/?q=" + ADDR.replace(" ", "+")
 MAP_EMBED= "https://www.google.com/maps?q=" + ADDR.replace(" ", "+") + "&output=embed"
 # socials — set to "" to hide a link
@@ -149,12 +154,14 @@ _SVC_PHOTO = {
 # The four owner photos (2026-07-26, from @jrliquormart, owner-approved) ARE the real store,
 # so their captions may say "our". The rest is licensed stock: category shots that must keep
 # generic captions and must never be described as JR's own store.
+# 8 tiles, not 9: mobile is 2-up so an odd count orphans the last tile on its own row,
+# and on desktop (3 cols, tile 1 spanning 2 rows) 8 tiles fill exactly 3 complete rows.
+# Keep the count EVEN if you add or remove any.
 GALLERY = [
  ("shelf","frey-ranch-rye.jpg","Frey Ranch rye, in the store"),   # owner photo
  ("cave","beer-ice.jpg","Buried in ice"),
  ("shelf","cooler-case.jpg","Our spirits case"),                  # owner photo
  ("store","sign-welcome.jpg","Our welcome board"),                # owner photo
- ("cave","ice-cold-can.jpg","Ice cold"),
  ("store","amigos-display.jpg","New arrivals on the floor"),      # owner photo
  ("shelf","backlit-bottles.jpg","Backlit bottles"),
  ("cave","bottle-on-ice.jpg","Cold one, ready"),
@@ -210,16 +217,15 @@ def contact_form(svc_opts):
     have the message go nowhere: FormSubmit will not deliver to an unconfirmed address,
     and example.com is IANA-reserved so the confirmation can never be clicked. Silently
     losing a customer's message is worse than not offering the form, so until EMAIL is
-    real and activated we show the call/text route instead. Flip EMAIL_READY to restore.
+    real and activated we show the call route instead. Flip EMAIL_READY to restore.
     """
     if not EMAIL_READY:
         return f'''<div class="cform reveal">
     <h3>Talk to the counter</h3>
-    <p>Call or text and we'll check the shelf while you're on the line. Someone is here all
-       day, so you get a real answer on the spot instead of waiting on an email.</p>
+    <p>Give us a call and we'll check the shelf while you're on the line.</p>
     <a class="btn btn-primary btn-lg" href="tel:{PHONE_TEL}">Call {PHONE}<span class="btn-ic">&rarr;</span></a>
-    <p class="form-fine">Prefer to type? Use the chat at the bottom right, or message us on
-       <a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
+    {order_bar("order-inline")}
+    <p class="form-fine">Or message us on <a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
   </div>'''
     return f'''<form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
     <input type="hidden" name="_subject" value="New message from {DOMAIN}">
@@ -232,7 +238,7 @@ def contact_form(svc_opts):
       <select name="category"><option value="">Pick one</option>{svc_opts}<option>Something else</option></select></label>
     <label>What can we check for you?<textarea name="message" rows="5" placeholder="Bottle, brand, size, when you need it..."></textarea></label>
     <button class="btn btn-primary btn-lg" type="submit">Send it<span class="btn-ic">&rarr;</span></button>
-    <p class="form-fine">Fastest answer: call or text {PHONE}.</p>
+    <p class="form-fine">Fastest answer: call {PHONE}.</p>
   </form>'''
 
 def order_links():
@@ -459,10 +465,9 @@ def home():
   <div class="contact-in">
   {contact_form(svc_opts)}
   <aside class="contact-side reveal d1">
-    <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a><div class="cside-social"><a href="sms:{PHONE_TEL}">Send a text &rarr;</a></div></div>
-    <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
+    <div class="cside-card"><h3>Call us</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
+    <div class="cside-card"><h3>Visit</h3><p class="addr"><span class="addr-l">{ADDR_LINES[0]}</span> <span class="addr-l">{ADDR_LINES[1]}<span class="addr-sep">,</span></span> <span class="addr-l">{ADDR_LINES[2]}</span> <span class="addr-l">{ADDR_LINES[3]}</span></p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
-    <div class="cside-card"><h3>Order delivery</h3><div class="cside-social">{order_links()}</div></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
   </aside>
   </div>

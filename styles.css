@@ -283,6 +283,8 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .cside-card{background:var(--paper2);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px}
 .cside-card h3{font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .cside-card p{font-size:.98rem}
+/* Visit address: inline on desktop, one part per line on phones (see ADDR_LINES). */
+.addr-l{display:inline}
 .big-phone{font-family:var(--disp);font-weight:800;font-size:1.5rem;color:var(--pink-deep)}
 .cside-social{display:flex;flex-direction:column;gap:6px}
 .cside-social a,.cside-card>a{color:var(--pink-deep);font-weight:600;font-size:.96rem}
@@ -375,6 +377,8 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 }
 @media (max-width:600px){
   .wrap{padding:0 18px}
+  .addr .addr-l{display:block}
+  .addr .addr-sep{display:none}
   .nav-links,.nav-cta{display:none}.burger{display:flex}
   .nav-contact{display:grid;place-items:center;min-height:44px;flex:none;padding:0 14px;
     border-radius:100px;border:1px solid var(--line-2);color:var(--ink);

@@ -37,18 +37,12 @@ the video with ffmpeg.
 |---|---|---|
 | `beer-cave.jpg` | `nano_banana_pro` (Higgsfield), 2026-07-26, at Wyatt's direction | Generic walk-in beer cave interior, used as the Beer Cave card image. **Replaced `beer-cooler.jpg`** (Unsplash / wang binghua), which was a washed-out, reflection-blown shot of a single row of Budweiser in what read as a domestic fridge, not a beer cave. Generated 16:9 at 1376x768, then cropped to exactly 4:3 (1024x768) with the window shifted left — that removes the nearest right-hand shelf, whose beer packaging was the only vaguely legible branding. Prompt asked for no text, no logos and illegible labels. Like the stock below, this is **category imagery and must never be captioned as JR's own store**. |
 
-## Licensed stock
+## Licensed stock (Pexels)
 
 Free for commercial use with no attribution required
-([Pexels license](https://www.pexels.com/license/),
-[Unsplash license](https://unsplash.com/license)); credited here anyway, per the PLAYBOOK
-convention of recording every licensed asset.
-
-| File (assets/) | Photographer | Source |
-|---|---|---|
-| beer-cooler.jpg (Unsplash; cropped to 16:10 and warm-graded to match the site palette) | wang binghua | https://unsplash.com/photos/a-refrigerator-filled-with-lots-of-bottles-of-beer-CCq5riDV9FM |
-
-## Pexels
+([Pexels license](https://www.pexels.com/license/)); credited here anyway, per the PLAYBOOK
+convention of recording every licensed asset. (The one Unsplash image, `beer-cooler.jpg`,
+was deleted when the AI beer-cave shot replaced it; its credit lives in that row above.)
 
 | File (assets/) | Photographer | Source |
 |---|---|---|
@@ -58,7 +52,6 @@ convention of recording every licensed asset.
 | night-window.jpg | Brett Sayles | https://www.pexels.com/photo/pile-of-labeled-bottles-2606387/ |
 | beer-ice.jpg | Maor Attias | https://www.pexels.com/photo/bottles-and-ice-in-a-wheelbarrow-5175351/ |
 | bottle-on-ice.jpg | Ron Martinez | https://www.pexels.com/photo/beer-bottle-in-a-bucket-of-ice-4044674/ |
-| ice-cold-can.jpg | Tamba Budiarsana | https://www.pexels.com/photo/beer-can-cold-drink-171205 |
 | tequila-limes.jpg | Denys Gromov | https://www.pexels.com/photo/tequila-drink-with-slices-of-lime-on-the-top-of-shot-glass-4762727/ |
 | wine-dark.jpg | Atlantic Ambience | https://www.pexels.com/photo/wine-bottles-on-display-in-wooden-shelves-9397571/ |
 | wine-rack.jpg | Ata Ebem | https://www.pexels.com/photo/bottles-of-wine-stacked-on-shelf-11021166/ |
