@@ -12,7 +12,8 @@ Fraunces display; ONE-PAGE layout (was 5 pages; old URLs 301-style stub-redirect
 matching section); sections = hero (headline + order pills, no CTA buttons since
 2026-07-26), What We Carry (6 cards), Gallery, About, Reviews (real verbatim quotes),
 Contact + map. The marquee and the "Why" tiles were cut in the repetition audit; the
-call CTA lives in the nav and the mobile callbar. ORDER buttons link
+call CTA lives in the nav (and the mobile menu; the sticky call/text bar was
+removed 2026-07-26 at Wyatt's request). ORDER buttons link
 the store's VERIFIED delivery storefronts (it lists as "JR Food Mart" on Uber Eats and
 Postmates, "Jr Liquor & Convenience" on Grubhub; no DoorDash storefront found);
 hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deployed).
@@ -22,7 +23,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=9"   # bump on ANY css change
+CSSV = "styles.css?v=10"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
 CHATV= "chat.js?v=4"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
@@ -377,10 +378,6 @@ def footer():
 </div>
 <div class="legal wrap"><span>&copy; 2026 {BIZ}</span><span>21+ only. Please drink responsibly.</span></div>
 </footer>
-<div class="callbar" aria-label="Contact us">
-  <a href="tel:{PHONE_TEL}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call us</a>
-  <a href="sms:{PHONE_TEL}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>Text us</a>
-</div>
 {chat_widget()}
 <script src="{JSV}"></script>
 <script src="{CHATV}"></script></body></html>'''

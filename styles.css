@@ -572,18 +572,12 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .cw-nudge-x:hover{color:var(--ink);border-color:var(--muted)}
 @media(prefers-reduced-motion:reduce){.cw-nudge{transition:none}}
 
-/* sticky mobile call/text bar — phones only. One number by default (Call + Text buttons).
-   Two numbers? Swap the two <a> in footer() for region-labeled tel: links (see anderson-it). */
-.callbar{display:none}
+/* The sticky mobile call/text bar was removed 2026-07-26 (Wyatt's call). Its body
+   padding-bottom went with it, or the page kept dead space where the bar used to be.
+   The chat bubble keeps a safe-area inset so it clears the home indicator on notched
+   iPhones -- that was previously folded into the bar's offset. */
 @media(max-width:600px){
-  .callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:118;background:var(--grad);
-    box-shadow:0 -8px 24px -12px rgba(0,0,0,.4);padding-bottom:env(safe-area-inset-bottom)}
-  .callbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;color:#fff;text-decoration:none;
-    padding:14px 8px;font-family:var(--disp);font-weight:700;font-size:.98rem}
-  .callbar a+a{border-left:1px solid rgba(255,255,255,.3)}
-  .callbar svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;flex:none}
-  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
-  .cw{bottom:calc(76px + env(safe-area-inset-bottom))}
+  .cw{bottom:calc(14px + env(safe-area-inset-bottom))}
 }
 
 /* ---- services product grid (2-up cards) ---- */
