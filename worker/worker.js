@@ -19,7 +19,7 @@ const MAX_MSG_LEN = 1000;         // cap each inbound message
 
 const PHONE = "805-388-3288";
 const FALLBACK = `Sorry, I glitched for a second. You can reach us at ${PHONE} and we'll take care of you.`;
-const DEFLECT  = `Pricing depends on the job, so I don't quote it here. Call or text ${PHONE} and we'll give you an exact number.`;
+const DEFLECT  = `Pricing depends on the job, so I don't quote it here. Call ${PHONE} and we'll give you an exact number.`;
 
 // Any reply that looks like a specific price / guarantee is dropped and replaced with DEFLECT.
 // A dollar sign before a digit, a number followed by a currency/rate token, or "guarantee".
@@ -32,7 +32,7 @@ const SYSTEM = `You are the website assistant for JR Liquor Mart, a neighborhood
 
 === THE BUSINESS ===
 - Neighborhood beer, wine and spirits store on the same corner since 1997, recently remodeled, known for the bourbon wall and the walk-in "Beer Cave" cooler.
-- Phone (call or text): ${PHONE}. Instagram: @jrliquormart. No public email yet; point people to the contact form or the phone.
+- Phone: ${PHONE}. Instagram: @jrliquormart. No public email yet; point people to the contact form or the phone.
 - Hours: open daily 8am-10pm. Address: 2616 E Ventura Blvd Unit 106, Camarillo, CA 93010 (Old Town Camarillo).
 - Amenities: same-day delivery and curbside pickup through the delivery apps, in-store pickup, Apple Pay and contactless payment, wheelchair accessible, free parking lot.
 - Next door: JR Smoke Zone, our sister smoke shop.

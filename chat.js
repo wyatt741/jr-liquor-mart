@@ -35,11 +35,11 @@
   var ANSWERS = {
     services: "Bourbon and whiskey, the walk-in Beer Cave, tequila and agave, wine, and snacks, plus same-day delivery and curbside pickup through the apps. Hunting something specific? I can send the counter a bottle request.",
     hours:    "We're open daily 8am-10pm at " + ADDR + ". Free parking right outside.",
-    price:    "Prices change too often for me to quote here. Call or text " + PHONE + " and the counter will check for you.",
+    price:    "Prices change too often for me to quote here. Give the counter a call on " + PHONE + " and they will check for you.",
     delivery: "Same-day delivery through Uber Eats, Postmates or Grubhub (we're listed as JR Food Mart), plus curbside pickup at the store. Order links are on the site, or come grab it cold in person.",
-    contact:  "Call or text " + PHONE + ", or use the form further down this page. Want me to send the counter a bottle request instead?",
+    contact:  "Call us on " + PHONE + ", or use the form further down this page. Want me to send the counter a bottle request instead?",
     thanks:   "Anytime! Anything else I can check for you?",
-    fallback: "Good question. The counter will know for sure, call or text " + PHONE + ". Or I can send them a bottle request."
+    fallback: "Good question. The counter will know for sure, give them a call on " + PHONE + ". Or I can send them a bottle request."
   };
   function answer(text) {
     var q = text.toLowerCase(), has = function (a) { return a.some(function (w) { return q.indexOf(w) !== -1; }); };
@@ -140,7 +140,7 @@
       // No inbox wired up yet. This text is seen by REAL visitors on the live site, so it
       // must not read like a demo -- it used to say "In the live site this sends straight
       // to us", which is confusing when you ARE on the live site.
-      botSay("Thanks! We can't take requests through the site just yet, so please call or text "
+      botSay("Thanks! We can't take requests through the site just yet, so please call "
         + PHONE + " and the counter will sort you out.", function () { setInput(true, "Ask anything else..."); });
       return;
     }
@@ -149,8 +149,8 @@
     for (var k in fields) if (fields.hasOwnProperty(k)) payload[k] = fields[k];
     fetch(LEAD_URL, { method: "POST", headers: { "content-type": "application/json", "accept": "application/json" }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json(); })
-      .then(function (d) { var ok = d && (d.ok || d.success === "true" || d.success === true); botSay(ok ? okMsg : ("I couldn't send that just now. Please call or text " + PHONE + "."), function () { setInput(true, "Ask anything else..."); }); })
-      .catch(function () { botSay("I couldn't connect to send that. Please call or text " + PHONE + ".", function () { setInput(true, "Ask anything else..."); }); });
+      .then(function (d) { var ok = d && (d.ok || d.success === "true" || d.success === true); botSay(ok ? okMsg : ("I couldn't send that just now. Please call " + PHONE + "."), function () { setInput(true, "Ask anything else..."); }); })
+      .catch(function () { botSay("I couldn't connect to send that. Please call " + PHONE + ".", function () { setInput(true, "Ask anything else..."); }); });
   }
 
   function open() {
