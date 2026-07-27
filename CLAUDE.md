@@ -234,7 +234,22 @@ simulate the crop in PIL instead.
     count orphans the last tile; desktop is 3 cols with tile 1 spanning 2 rows, so 8 fills
     exactly 3 rows. There is a comment above `GALLERY` saying so.
 
-**Asset versions:** `styles.css?v=12` · `app.js?v=4` · `chat.js?v=4`. Bump on ANY change to
+- **Contact polish** (`283c8f0`, `3238d43`). Order cluster centred on phones (scoped to
+  `max-width:600px` — desktop's panel is left-aligned, don't make it unconditional).
+  Removed the "check the shelf" line and the Instagram line. **All addresses hyperlink to
+  Apple Maps on Apple devices, Google Maps elsewhere**: static links carry `data-maps` and
+  `app.js` rewrites them; `chat.js` builds its link at runtime after app.js so it computes
+  the same URL itself. "Get directions" was dropped since the address is now the link.
+  Delivery pills in the panel now render **identically to the hero's** — the panel's 20px
+  side padding made its row 40px narrower so the pills could not shrink and looked larger;
+  the row is bled back out to the card edge. `.order-btn{white-space:nowrap}` is
+  load-bearing: without it shrinking wraps "Uber Eats" inside the pill and it becomes 72px
+  tall instead of 48. Verified identical at 320/430/500.
+- **`Backups/` is gitignored** and holds `jr-liquor-mart-BACKUP-20260726.tar.gz` — the
+  **pre-scrub** repo, i.e. the restore point containing the un-scrubbed history and the old
+  `docs/`. Never commit it; keep it until the history rewrite is done and verified.
+
+**Asset versions:** `styles.css?v=14` · `app.js?v=5` · `chat.js?v=5`. Bump on ANY change to
 that file; a copy-only `build.py` edit needs no bump.
 
 **NEXT:** decide on the history rewrite (the only open technical item), then the
