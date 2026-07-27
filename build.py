@@ -23,9 +23,9 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=12"   # bump on ANY css change
-JSV  = "app.js?v=4"       # bump on ANY app.js change
-CHATV= "chat.js?v=4"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
+CSSV = "styles.css?v=13"   # bump on ANY css change
+JSV  = "app.js?v=5"       # bump on ANY app.js change
+CHATV= "chat.js?v=5"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
 INITIAL  = "JR"                                  # placeholder logo letters (until a real logo drops in)
@@ -222,10 +222,8 @@ def contact_form(svc_opts):
     if not EMAIL_READY:
         return f'''<div class="cform reveal">
     <h3>Talk to the counter</h3>
-    <p>Give us a call and we'll check the shelf while you're on the line.</p>
     <a class="btn btn-primary btn-lg" href="tel:{PHONE_TEL}">Call {PHONE}<span class="btn-ic">&rarr;</span></a>
     {order_bar("order-inline")}
-    <p class="form-fine">Or message us on <a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
   </div>'''
     return f'''<form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
     <input type="hidden" name="_subject" value="New message from {DOMAIN}">
@@ -377,7 +375,7 @@ def footer():
   </div>
   <div class="foot-col"><h4>Explore</h4>{cols}</div>
   <div class="foot-col"><h4>Visit</h4>
-    <a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a>
+    <a href="{MAPS}" data-maps="{ADDR}" target="_blank" rel="noopener">{ADDR}</a>
     <a href="tel:{PHONE_TEL}">{PHONE}</a>
     {email_line}
     <span class="foot-note">{HOURS}</span>
@@ -466,7 +464,7 @@ def home():
   {contact_form(svc_opts)}
   <aside class="contact-side reveal d1">
     <div class="cside-card"><h3>Call us</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
-    <div class="cside-card"><h3>Visit</h3><p class="addr"><span class="addr-l">{ADDR_LINES[0]}</span> <span class="addr-l">{ADDR_LINES[1]}<span class="addr-sep">,</span></span> <span class="addr-l">{ADDR_LINES[2]}</span> <span class="addr-l">{ADDR_LINES[3]}</span></p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
+    <div class="cside-card"><h3>Visit</h3><a class="addr" href="{MAPS}" data-maps="{ADDR}" target="_blank" rel="noopener"><span class="addr-l">{ADDR_LINES[0]}</span> <span class="addr-l">{ADDR_LINES[1]}<span class="addr-sep">,</span></span> <span class="addr-l">{ADDR_LINES[2]}</span> <span class="addr-l">{ADDR_LINES[3]}</span></a></div>
     <div class="cside-card"><h3>Hours</h3><p>{HOURS}</p></div>
     <div class="cside-card"><h3>Follow</h3><div class="cside-social">{_social()}</div></div>
   </aside>

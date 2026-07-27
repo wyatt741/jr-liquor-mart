@@ -109,3 +109,10 @@ if (lb) {
   lb.addEventListener('click', e => { if (e.target !== lbImg) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 }
+
+// Address link: default href is Google Maps (works everywhere). On Apple devices swap to
+// maps.apple.com so it opens Apple Maps natively instead of bouncing through the browser.
+document.querySelectorAll('a[data-maps]').forEach(a => {
+  if (!/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent)) return;
+  a.href = 'https://maps.apple.com/?q=' + encodeURIComponent(a.getAttribute('data-maps'));
+});
