@@ -136,8 +136,12 @@
 
   // ---- lead sender: wizard + follow-up both route here ----
   function sendLead(fields, okMsg) {
-    if (!LEAD_URL) {   // demo mode: nothing wired up yet
-      botSay(okMsg + " (In the live site this sends straight to us. For now, call or text " + PHONE + ".)", function () { setInput(true, "Ask anything else..."); });
+    if (!LEAD_URL) {
+      // No inbox wired up yet. This text is seen by REAL visitors on the live site, so it
+      // must not read like a demo -- it used to say "In the live site this sends straight
+      // to us", which is confusing when you ARE on the live site.
+      botSay("Thanks! We can't take requests through the site just yet, so please call or text "
+        + PHONE + " and the counter will sort you out.", function () { setInput(true, "Ask anything else..."); });
       return;
     }
     setInput(false, "Sending...");

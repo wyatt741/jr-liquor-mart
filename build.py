@@ -24,7 +24,7 @@ from datetime import date, datetime, timezone
 
 CSSV = "styles.css?v=9"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
-CHATV= "chat.js?v=3"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
+CHATV= "chat.js?v=4"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
 INITIAL  = "JR"                                  # placeholder logo letters (until a real logo drops in)
@@ -200,6 +200,40 @@ def order_bar(cls=""):
         for n,u in ORDER)
     return f'<div class="order-bar{" "+cls if cls else ""}"><span class="order-lbl">Order delivery</span><div class="order-btns">{btns}</div></div>'
 
+def contact_form(svc_opts):
+    """The contact form, but ONLY when there is a real inbox to receive it.
+
+    BUG FIX 2026-07-26: this used to render unconditionally with
+    action="https://formsubmit.co/inbox@example.com". EMAIL_READY only ever hid the
+    footer mailto, so on the LIVE site a visitor could fill the form in, submit, and
+    have the message go nowhere: FormSubmit will not deliver to an unconfirmed address,
+    and example.com is IANA-reserved so the confirmation can never be clicked. Silently
+    losing a customer's message is worse than not offering the form, so until EMAIL is
+    real and activated we show the call/text route instead. Flip EMAIL_READY to restore.
+    """
+    if not EMAIL_READY:
+        return f'''<div class="cform reveal">
+    <h3>Ask us to check a bottle</h3>
+    <p>Call or text and we'll look right then. Someone is behind the counter all day, so
+       you get an answer on the spot instead of waiting on an email.</p>
+    <a class="btn btn-primary btn-lg" href="tel:{PHONE_TEL}">Call {PHONE}<span class="btn-ic">&rarr;</span></a>
+    <p class="form-fine">Prefer to type? Use the chat at the bottom right, or message us on
+       <a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
+  </div>'''
+    return f'''<form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
+    <input type="hidden" name="_subject" value="New message from {DOMAIN}">
+    <input type="hidden" name="_template" value="table">
+    <input type="text" name="_honey" style="display:none">
+    <div class="f-row"><label>Name<input name="name" autocomplete="name" required></label>
+    <label>Phone<input name="phone" type="tel" autocomplete="tel"></label></div>
+    <label>Email<input name="email" type="email" autocomplete="email" required></label>
+    <label>What are you after?
+      <select name="category"><option value="">Pick one</option>{svc_opts}<option>Something else</option></select></label>
+    <label>What can we check for you?<textarea name="message" rows="5" placeholder="Bottle, brand, size, when you need it..."></textarea></label>
+    <button class="btn btn-primary btn-lg" type="submit">Send it<span class="btn-ic">&rarr;</span></button>
+    <p class="form-fine">Fastest answer: call or text {PHONE}.</p>
+  </form>'''
+
 def order_links():
     """Plain text links for the contact aside. Deliberately NOT order_bar()'s pill
     buttons: the hero already carries the one loud order cluster, and the 2026-07-27
@@ -363,7 +397,10 @@ def home():
     filt = "".join(f'<button class="gfilter{" active" if c=="all" else ""}" data-cat="{c}">{t}</button>' for c,t in GCATS)
     tiles = "".join(photo(c,f,l,lightbox=True) for c,f,l in GALLERY)
     svc_opts = "".join(f"<option>{s[2]}</option>" for s in SERVICES)
-    return head(f"{BIZ} | Liquor Store in Old Town Camarillo, CA",
+    # Was "... | Liquor Store in Old Town Camarillo, CA": generic, and it repeated
+    # "Liquor" right after "JR Liquor Mart". Camarillo + CA stay (local SEO); the freed
+    # characters now carry higher-intent terms people actually search for.
+    return head(f"{BIZ} | Bourbon, Beer Cave & Wine in Camarillo, CA",
                 # keep under ~155 chars or Google truncates it mid-sentence in results
                 f"{TAG}. Bourbon wall, walk-in Beer Cave, wine, tequila and snacks. Same-day delivery. Call {PHONE}.",
                 "home","") + nav("#top") + f'''
@@ -417,19 +454,7 @@ def home():
   <div class="sec-head center reveal"><h2>Come by or call</h2>
     <p>Ask us to check a bottle, or just come say hi.</p></div>
   <div class="contact-in">
-  <form class="cform reveal" action="https://formsubmit.co/{EMAIL}" method="POST">
-    <input type="hidden" name="_subject" value="New message from jrliquormart.com">
-    <input type="hidden" name="_template" value="table">
-    <input type="text" name="_honey" style="display:none">
-    <div class="f-row"><label>Name<input name="name" required></label>
-    <label>Phone<input name="phone" type="tel"></label></div>
-    <label>Email<input name="email" type="email" required></label>
-    <label>What are you after?
-      <select name="category"><option value="">Pick one</option>{svc_opts}<option>Something else</option></select></label>
-    <label>What can we check for you?<textarea name="message" rows="5" placeholder="Bottle, brand, size, when you need it..."></textarea></label>
-    <button class="btn btn-primary btn-lg" type="submit">Send it<span class="btn-ic">&rarr;</span></button>
-    <p class="form-fine">Fastest answer: call or text {PHONE}.</p>
-  </form>
+  {contact_form(svc_opts)}
   <aside class="contact-side reveal d1">
     <div class="cside-card"><h3>Call or text</h3><a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a></div>
     <div class="cside-card"><h3>Visit</h3><p>{ADDR}</p><a href="{MAPS}" target="_blank" rel="noopener">Get directions &rarr;</a></div>
