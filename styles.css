@@ -531,6 +531,7 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .order-bar{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 .order-lbl{font-family:var(--disp);font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .order-btns{display:flex;flex-wrap:wrap;gap:10px}
+.order-btn{white-space:nowrap}
 .order-btn{--oc:var(--pink);display:inline-flex;align-items:center;gap:9px;background:var(--oc);color:#fff;
   font-family:var(--disp);font-weight:700;font-size:.92rem;padding:11px 18px;border-radius:100px;text-decoration:none;
   border:1px solid rgba(255,255,255,.14);transition:transform .4s var(--ease),box-shadow .4s var(--ease),filter .2s}
@@ -571,6 +572,11 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 @media(max-width:600px){
   .cform{text-align:center}
   .cform .order-bar{align-items:center}
+  /* Match the hero's pills exactly. The panel's 20px side padding made its row 40px
+     narrower than the hero's, so the pills could not shrink the same way and rendered at
+     full width, wrapping 2+1 and looking LARGER. Bleeding the row back out to the card
+     edge gives it the hero's width, so both shrink identically onto one row. */
+  .cform .order-bar{margin-left:-20px;margin-right:-20px}
   .cform .order-btns{justify-content:center}
 }
 

@@ -23,7 +23,7 @@ hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deplo
 import json
 from datetime import date, datetime, timezone
 
-CSSV = "styles.css?v=13"   # bump on ANY css change
+CSSV = "styles.css?v=14"   # bump on ANY css change
 JSV  = "app.js?v=5"       # bump on ANY app.js change
 CHATV= "chat.js?v=5"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
