@@ -9,8 +9,10 @@ source or the owner. House rules: no fabricated content, no em dashes.
 
 Decisions (2026-07-26, confirmed with Wyatt): dark default + amber/bourbon palette,
 Fraunces display; ONE-PAGE layout (was 5 pages; old URLs 301-style stub-redirect to the
-matching section); sections = hero, order band, marquee, What We Carry (6 cards),
-Gallery, Why, About, Reviews (real verbatim quotes), Contact + map; ORDER buttons link
+matching section); sections = hero (headline + order pills, no CTA buttons since
+2026-07-26), What We Carry (6 cards), Gallery, About, Reviews (real verbatim quotes),
+Contact + map. The marquee and the "Why" tiles were cut in the repetition audit; the
+call CTA lives in the nav and the mobile callbar. ORDER buttons link
 the store's VERIFIED delivery storefronts (it lists as "JR Food Mart" on Uber Eats and
 Postmates, "Jr Liquor & Convenience" on Grubhub; no DoorDash storefront found);
 hybrid AI chatbot (worker/ on chat.jrliquormart.com, canned fallback until deployed).
@@ -22,7 +24,7 @@ from datetime import date, datetime, timezone
 
 CSSV = "styles.css?v=9"   # bump on ANY css change
 JSV  = "app.js?v=4"       # bump on ANY app.js change
-CHATV= "chat.js?v=2"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
+CHATV= "chat.js?v=3"      # bump on ANY chat.js change (hybrid AI mode: WORKER_URL in chat.js)
 
 BIZ      = "JR Liquor Mart"
 INITIAL  = "JR"                                  # placeholder logo letters (until a real logo drops in)
@@ -127,7 +129,7 @@ SERVICES = [
  ("snacks-extras","bag","Snacks & Extras",
   "Snacks, cold sodas and energy drinks, right by the register."),
  ("delivery-pickup","truck","Delivery & Pickup",
-  "Order through the apps up top, or call it in and grab it curbside. Free lot out front, Apple Pay at the register."),
+  "Order through the apps up top, or call it in and grab it curbside. Apple Pay at the register."),
 ]
 # services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
 _SVC_PHOTO = {
@@ -335,7 +337,7 @@ def footer():
     <span class="foot-note">{HOURS}</span>
   </div>
 </div>
-<div class="legal wrap"><span>&copy; 2026 {BIZ}. All rights reserved.</span><span>21+ only. Please drink responsibly.</span></div>
+<div class="legal wrap"><span>&copy; 2026 {BIZ}</span><span>21+ only. Please drink responsibly.</span></div>
 </footer>
 <div class="callbar" aria-label="Contact us">
   <a href="tel:{PHONE_TEL}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call us</a>
@@ -370,9 +372,7 @@ def home():
   <div class="hero-copy reveal">
     <span class="eyebrow">Old Town Local &middot; Est. 1997</span>
     <h1>The bourbon wall, the <span class="hl">Beer Cave</span>, and a counter that knows your name.</h1>
-    <p>Same-day delivery and curbside pickup, or park free out front and browse.</p>
-    <div class="hero-btns"><a class="btn btn-primary btn-lg cta-anim" href="tel:{PHONE_TEL}">Call the store<span class="btn-ic">&rarr;</span></a>
-    <a class="btn btn-ghost btn-lg" href="#carry">See what we carry</a></div>
+    <p>Same-day delivery, curbside pickup, or walk in and take your time.</p>
     {order_bar()}
   </div>
   <div class="hero-art reveal d1"><div class="hero-frame">{photo("shelf","hero-shelf.jpg","Bottles glowing on an amber-lit shelf",eager=True)}</div></div>
@@ -387,7 +387,7 @@ def home():
 
 <section class="section band" id="gallery"><div class="wrap">
   <div class="sec-head center reveal"><h2>A taste of the good stuff</h2>
-    <p>Shots from the shop, with licensed stock filling the gaps until we photograph the rest.</p></div>
+    <p>Cold cases, full shelves, and a bourbon wall worth the trip.</p></div>
   <div class="gfilters reveal">{filt}</div>
   <div class="gal-grid gal-masonry" id="gal">{tiles}</div>
 </div></section>
@@ -408,7 +408,7 @@ def home():
 </div></section>
 
 <section class="section band"><div class="wrap">
-  <div class="sec-head center reveal"><span class="eyebrow">Real reviews</span><h2>What customers say</h2>
+  <div class="sec-head center reveal"><span class="eyebrow">Real reviews</span><h2>In their own words</h2>
     <p class="sample-note">Quoted word for word from public Yelp and Google reviews.</p></div>
   <div class="tst-grid stagger reveal">{tst}</div>
 </div></section>
