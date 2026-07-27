@@ -1,7 +1,7 @@
 /* Chat assistant — quote wizard + free-text answers, runs client-side.
    Set LEAD_URL to actually SEND leads (FormSubmit inbox or a Worker /lead). Empty = demo only.
-   Baked in: quote wizard -> lead email (with the full chat transcript), a proactive nudge
-   (once/session), and soft follow-up capture for people who chat but skip the wizard.
+   Baked in: bottle-request wizard -> lead email (with the full chat transcript) and soft
+   follow-up capture for people who chat but skip the wizard. (No proactive nudge here.)
 
    TWO chat modes, chosen by WORKER_URL in the CONFIG block below:
    - FREE (WORKER_URL empty): free-text hits the deterministic canned ANSWERS. No backend, no cost.
@@ -195,22 +195,8 @@
   }
   function submitQuote() { mode = "chat"; sendLead(answers, "Perfect, that's everything" + (answers.name ? ", " + answers.name : "") + "! We'll check the shelf and get back to you."); }
 
-  // ---- proactive nudge (once per session, tasteful, dismissible) ----
-  function showNudge() {
-    if (started || !panel.hidden) return;
-    try { if (sessionStorage.getItem("cw-nudged")) return; sessionStorage.setItem("cw-nudged", "1"); } catch (e) {}
-    var n = el("div", "cw-nudge");
-    var msg = el("button", "cw-nudge-msg", "Questions? I can help 👋"); msg.type = "button";
-    var x = el("button", "cw-nudge-x"); x.type = "button"; x.setAttribute("aria-label", "Dismiss"); x.textContent = "×";
-    n.appendChild(msg); n.appendChild(x); root.appendChild(n);
-    requestAnimationFrame(function () { n.classList.add("in"); });
-    var kill = function () { n.classList.remove("in"); setTimeout(function () { if (n.parentNode) n.parentNode.removeChild(n); }, 350); };
-    msg.addEventListener("click", function () { kill(); open(); });
-    x.addEventListener("click", function (e) { e.stopPropagation(); kill(); });
-    setTimeout(function () { if (panel.hidden) kill(); }, 9000);
-  }
-  setTimeout(showNudge, 20000);
-  window.addEventListener("scroll", function onScroll() { if (window.scrollY > 700) { showNudge(); window.removeEventListener("scroll", onScroll); } }, { passive: true });
+  // (The template's proactive nudge bubble was removed for this site, Wyatt's call:
+  // the chat icon is enough. Restore from site-template's chat.js if ever wanted.)
 
   // ---- soft follow-up capture (chatters who skip the wizard; never on close) ----
   var asked = 0, followOffered = false, fu = {}, fuStep = 0;
