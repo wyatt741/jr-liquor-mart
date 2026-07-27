@@ -177,6 +177,22 @@ simulate the crop in PIL instead.
   *desktop* width one input computes to 14.88px and looks like the iOS focus-zoom bug — it
   is not; the 16px rule is in a mobile media query and no input is under 16px on a phone.
 
+- **Copy sweep + hero CTAs removed** (`601a85a`). "Call the store" and "See what we carry"
+  are gone from the hero (the call action lives in the nav CTA and the mobile callbar; the
+  order pills are now the hero's only action). "Free parking" was in **three** places and
+  was cut from the hero and the Delivery card — but **deliberately kept in the chatbot**,
+  where the "parking" keyword routes to that answer, so it responds to a question rather
+  than volunteering an assumed fact; don't delete it there. The gallery subhead no longer
+  exposes internal stock-photo housekeeping, and it describes the **shop, not the photos**
+  on purpose — the per-tile captions ("Our spirits case" vs "Backlit bottles") are what
+  keep stock from being passed off as the real store. Also fixed two stale facts: `chat.js`
+  pointed at a "contact page" that has not existed since the one-page conversion
+  (`chat.js?v=3`), and the `build.py` docstring still listed the deleted marquee/Why
+  sections.
+
+**Asset versions:** `styles.css?v=9` · `app.js?v=4` · `chat.js?v=3`. Bump on ANY change to
+that file; a copy-only `build.py` edit needs no bump.
+
 **NEXT:** decide on the history rewrite (the only open technical item), then the
 owner-dependent launch blockers below. The site itself needs no further technical work.
 
