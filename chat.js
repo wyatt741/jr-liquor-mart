@@ -19,7 +19,11 @@
   // ============================ CONFIG (customize) ============================
   var PHONE = "805-388-3288";
   var ADDR = "2616 E Ventura Blvd Unit 106, Camarillo, CA 93010";   // match build.py ADDR so the bot links it
-  var MAPS = "https://maps.google.com/?q=2616+E+Ventura+Blvd+Unit+106,+Camarillo,+CA+93010";
+  // Apple devices open Apple Maps natively; everything else gets Google Maps. Chat links
+  // are created at runtime, after app.js has run, so this cannot rely on that handler.
+  var MAPS = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent)
+    ? "https://maps.apple.com/?q=" + encodeURIComponent(ADDR)
+    : "https://maps.google.com/?q=" + encodeURIComponent(ADDR);
   var ADDR_RE = ADDR.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // WHERE LEADS GO. Empty string = demo only (nothing is sent). Otherwise one of:
   //   FormSubmit (client-side, no backend): "https://formsubmit.co/ajax/inbox@example.com"
