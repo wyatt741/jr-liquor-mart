@@ -132,7 +132,7 @@ SERVICES = [
 # services() page card photos: id -> (assets file, alt). Licensed stock, generic alts.
 _SVC_PHOTO = {
  "bourbon-whiskey": ("shelf","backbar-glow.jpg","Spirits lined up on a lit back bar"),
- "beer-cave":       ("cave","beer-ice.jpg","Beer bottles buried in ice"),
+ "beer-cave":       ("cave","beer-cooler.jpg","Rows of cold beer behind cooler glass"),
  "tequila-agave":   ("shelf","tequila-limes.jpg","Tequila shots with lime and salt"),
  "wine":            ("store","wine-dark.jpg","Wine bottles on a dark shelf"),
  "snacks-extras":   ("store","snack-wall.jpg","A wall of snacks"),
