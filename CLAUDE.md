@@ -164,7 +164,21 @@ simulate the crop in PIL instead.
   now calls its handler straight from the scroll listener; to test it in the pane you must
   `dispatchEvent(new Event('scroll'))` by hand.
 
-**NEXT:** decide on the history rewrite, then the owner-dependent launch blockers below.
+- **Mobile + SEO audit passed clean** (`85ed979`): Lighthouse mobile **Accessibility 100,
+  SEO 100, Best Practices 100, Agentic Browsing 100, 0 failures**; **CLS 0.00**, LCP ~1.07s;
+  zero horizontal overflow 320-1440. Fixed a skipped heading level (footer `h5`→`h4`), a
+  WCAG 2.5.3 failure on the brand link (the monogram repeats the wordmark, so the visible
+  text was "JRJR Liquor Mart" and no longer matched the aria-label — monogram is now
+  `aria-hidden`), 41px gallery filters → 44px, and a 168-char meta description → 155.
+  `styles.css?v=9`.
+  ⚠️ **Do not "fix" these without re-measuring:** the 18 images have no `width`/`height`
+  attributes but CLS is already **0.00** (CSS `aspect-ratio` reserves the space), and font
+  preconnects already exist with render-blocking savings measured as "none". Also, at
+  *desktop* width one input computes to 14.88px and looks like the iOS focus-zoom bug — it
+  is not; the 16px rule is in a mobile media query and no input is under 16px on a phone.
+
+**NEXT:** decide on the history rewrite (the only open technical item), then the
+owner-dependent launch blockers below. The site itself needs no further technical work.
 
 ## Resume
 Say `resume jr-liquor-mart`. Read the ⭐ block above, then (on this Mac only)
