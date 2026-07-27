@@ -5,10 +5,11 @@ Marketing site for **JR Liquor Mart**, 2616 E Ventura Blvd Unit 106, Camarillo, 
 Built 2026-07-26 from Wyatt's `site-template` (its `PLAYBOOK.md` governs conventions).
 
 **This IS the site's own repo** (`wyatt741/jr-liquor-mart`, public, deploy branch `master`),
-split out on 2026-07-26 from the merged `wyatt741/site-template` PR #3 (the `jr-liquor-mart/`
-folder there is a historical copy; THIS repo is the source of truth). GitHub Pages serves
-`master` root once enabled in Settings; custom domain `jrliquormart.com` is still unregistered,
-so `CNAME` is parked as `CNAME.hold` (rename back once the domain's DNS points at Pages).
+split out on 2026-07-26 from `wyatt741/site-template` PR #3; the subfolder copy there was
+later removed from site-template `main` (commit 396aa40, "Move jr-liquor-mart out to its
+own repo"), so THIS repo is the sole home. GitHub Pages serves `master` root (LIVE at
+https://wyatt741.github.io/jr-liquor-mart/); custom domain `jrliquormart.com` is still
+unregistered, so `CNAME` is parked as `CNAME.hold` (rename back once DNS points at Pages).
 
 ## The one rule
 Edit content in `build.py`, run `python3 build.py`, never hand-edit the generated `.html`.
