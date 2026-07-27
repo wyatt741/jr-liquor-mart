@@ -535,6 +535,14 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .order-postmates{--oc:#191919}
 .order-pickup{--oc:var(--pink)}
 
+/* Instagram embeds (official). IG renders its own white cards inside iframes we can't
+   style, so we frame them on a panel and let them read as what they are: IG posts. */
+.ig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;
+  align-items:start;justify-items:center;margin-bottom:34px}
+.ig-grid .instagram-media{margin:0 !important;min-width:0 !important;width:100% !important;
+  max-width:420px !important;border-radius:var(--r-lg) !important;box-shadow:var(--shadow-soft) !important}
+@media(max-width:600px){.ig-grid{gap:14px}}
+
 /* hero order pills: the site's ONE order-button cluster; centered under the CTAs on phones */
 @media(max-width:600px){
   .hero .order-bar{flex-direction:column;align-items:center;gap:10px}

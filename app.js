@@ -34,6 +34,21 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+// Instagram embeds: pull in IG's script only when the section nears the viewport, so the
+// hero's LCP never pays for it. Never loads at all when IG_POSTS is empty (no section).
+const igGrid = document.getElementById('ig-grid');
+if (igGrid) {
+  const igIO = new IntersectionObserver((entries) => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    igIO.disconnect();
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.instagram.com/embed.js';
+    document.body.appendChild(s);
+  }, { rootMargin: '600px 0px' });
+  igIO.observe(igGrid);
+}
+
 // Gallery filter
 const filters = document.querySelectorAll('.gfilter');
 if (filters.length) {
