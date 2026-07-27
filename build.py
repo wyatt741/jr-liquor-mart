@@ -213,9 +213,9 @@ def contact_form(svc_opts):
     """
     if not EMAIL_READY:
         return f'''<div class="cform reveal">
-    <h3>Ask us to check a bottle</h3>
-    <p>Call or text and we'll look right then. Someone is behind the counter all day, so
-       you get an answer on the spot instead of waiting on an email.</p>
+    <h3>Talk to the counter</h3>
+    <p>Call or text and we'll check the shelf while you're on the line. Someone is here all
+       day, so you get a real answer on the spot instead of waiting on an email.</p>
     <a class="btn btn-primary btn-lg" href="tel:{PHONE_TEL}">Call {PHONE}<span class="btn-ic">&rarr;</span></a>
     <p class="form-fine">Prefer to type? Use the chat at the bottom right, or message us on
        <a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
