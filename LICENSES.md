@@ -1,9 +1,16 @@
 # Photo licenses
 
-All site photography is licensed stock from Pexels (free to use, no attribution required
-per the [Pexels license](https://www.pexels.com/license/); credited here anyway, per the
-PLAYBOOK convention of recording every licensed asset). These are CATEGORY shots with
-generic captions, not photos of JR Liquor Mart itself; owner photos replace them over time.
+All site photography is licensed stock, free for commercial use with no attribution
+required ([Pexels license](https://www.pexels.com/license/),
+[Unsplash license](https://unsplash.com/license)); credited here anyway, per the PLAYBOOK
+convention of recording every licensed asset. These are CATEGORY shots with generic
+captions, not photos of JR Liquor Mart itself; owner photos replace them over time.
+
+| File (assets/) | Photographer | Source |
+|---|---|---|
+| beer-cooler.jpg (Unsplash; cropped to 16:10 and warm-graded to match the site palette) | wang binghua | https://unsplash.com/photos/a-refrigerator-filled-with-lots-of-bottles-of-beer-CCq5riDV9FM |
+
+## Pexels
 
 | File (assets/) | Photographer | Source |
 |---|---|---|
