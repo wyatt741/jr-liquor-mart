@@ -175,7 +175,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .gal-masonry .tile:nth-child(7n+1){grid-row:span 2}
 .gal-masonry .tile:nth-child(7n+1) img{aspect-ratio:4/5}
 .gfilters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:34px}
-.gfilter{font-family:var(--disp);font-weight:700;font-size:.9rem;padding:10px 20px;border-radius:100px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;transition:.3s var(--ease)}
+.gfilter{font-family:var(--disp);font-weight:700;font-size:.9rem;padding:10px 20px;min-height:44px;border-radius:100px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;transition:.3s var(--ease)}
 .gfilter:hover{border-color:var(--pink);color:var(--pink-deep)}
 .gfilter.active{background:var(--btn-solid);color:#fff;border-color:var(--btn-solid)}
 .tile.hide{display:none}
@@ -301,7 +301,7 @@ footer{background:var(--night);color:#c8bfc7;padding:60px 0 28px}
 .foot-social{display:flex;gap:16px;margin-top:16px}
 .foot-social a{color:#fff;font-weight:600;font-size:.9rem;position:relative}
 .foot-social a:hover{color:var(--pink-soft)}
-.foot-col h5{font-family:var(--disp);color:#fff;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.foot-col h4{font-family:var(--disp);color:#fff;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
 .foot-col a,.foot-note{display:block;color:#c8bfc7;padding:5px 0;font-size:.95rem}
 .foot-col a:hover{color:#fff}
 .foot-note{color:#8f8592;font-size:.86rem;margin-top:6px}
